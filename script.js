@@ -1,6 +1,5 @@
 const ACCESS_CODES = ["1234","LAP2026"];
 
-/* DATABASE */
 const db={
 "Streckenausrüstung":[
 {q:"Abstand zweigleisig?",a:["50","100","200","500"],c:1},
@@ -99,29 +98,43 @@ el.bigCircle.innerText=percent+"%";
 },100);
 }
 
-/* CATEGORIES */
+/* CATEGORIES MIT ANIMATION */
 function loadCats(){
 el.cats.innerHTML="";
 
 Object.keys(db).forEach(cat=>{
+let s=stats[cat]||{c:0,t:0};
+let p=s.t?Math.round(s.c/s.t*100):0;
+
 let div=document.createElement("div");
 div.className="cat";
-div.innerText=cat;
 div.onclick=()=>openCat(cat);
+
+let circle=document.createElement("div");
+circle.className="circle";
+circle.innerText="0%";
+
+/* SMOOTH ANIMATION */
+setTimeout(()=>{
+circle.style.background=`conic-gradient(#7c3aed ${p}%, #1f2937 ${p}%)`;
+circle.innerText=p+"%";
+},150);
+
+div.innerHTML=`<div>${cat}</div>`;
+div.appendChild(circle);
+
 el.cats.appendChild(div);
 });
 }
 
 let current="",quizData=[],i=0,fail=0;
 
-/* OPEN */
 function openCat(c){
 current=c;
 el.cats.style.display="none";
 el.mode.style.display="block";
 }
 
-/* START */
 function start(type){
 i=0;fail=0;
 
@@ -143,7 +156,6 @@ el.quiz.style.display="block";
 load();
 }
 
-/* LOAD */
 function load(){
 if(i>=quizData.length){
 alert("Fertig");
@@ -167,7 +179,6 @@ el.progress.innerText=(i+1)+"/"+quizData.length;
 el.bar.style.width=(i/quizData.length*100)+"%";
 }
 
-/* ANSWER */
 function answer(ix,b,qd){
 let s=stats[current]||{c:0,t:0};
 s.t++;
