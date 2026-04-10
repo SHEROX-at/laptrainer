@@ -20,32 +20,26 @@ q:document.getElementById("q"),
 answers:document.getElementById("answers"),
 progress:document.getElementById("progress"),
 bar:document.getElementById("bar"),
-title:document.getElementById("title"),
+catTitle:document.getElementById("catTitle"),
 name:document.getElementById("name"),
 pw:document.getElementById("pw"),
 code:document.getElementById("code")
 };
 
-let stats=JSON.parse(localStorage.getItem("stats"))||{};
-let wrong=JSON.parse(localStorage.getItem("wrong"))||{};
+let current="",quizData=[],i=0;
 
 /* LOGIN */
 function register(){
-let n=el.name.value,p=el.pw.value,c=el.code.value;
-if(!ACCESS_CODES.includes(c)) return alert("Code falsch");
-
 let u=JSON.parse(localStorage.getItem("users"))||{};
-u[n]=p;
+if(!ACCESS_CODES.includes(el.code.value)) return alert("Code falsch");
+u[el.name.value]=el.pw.value;
 localStorage.setItem("users",JSON.stringify(u));
 alert("Registriert");
 }
 
 function login(){
-let n=el.name.value,p=el.pw.value;
 let u=JSON.parse(localStorage.getItem("users"))||{};
-if(u[n]!==p) return alert("Falsch");
-
-localStorage.setItem("user",n);
+if(u[el.name.value]!==el.pw.value) return alert("Falsch");
 showApp();
 }
 
@@ -55,24 +49,16 @@ el.app.style.display="block";
 loadCats();
 }
 
+function logout(){location.reload();}
+
 /* CATS */
 function loadCats(){
 el.cats.innerHTML="";
-el.title.innerText="Kategorien";
-
 Object.keys(db).forEach(cat=>{
-let s=stats[cat]||{c:0,t:0};
-let p=s.t?Math.round(s.c/s.t*100):0;
-
 let div=document.createElement("div");
 div.className="cat";
+div.innerHTML=`<span>${cat}</span><div class="circle">0%</div>`;
 div.onclick=()=>openCat(cat);
-
-div.innerHTML=`
-<div>${cat}</div>
-<div class="circle">${p}%</div>
-`;
-
 el.cats.appendChild(div);
 });
 }
@@ -80,18 +66,14 @@ el.cats.appendChild(div);
 /* NAV */
 function openCat(c){
 current=c;
-el.cats.classList.add("hidden");
+el.catTitle.innerText=c;
 el.mode.classList.remove("hidden");
-el.title.innerText=c;
+el.cats.classList.add("hidden");
 }
 
-function back(){
-location.reload();
-}
+function back(){location.reload();}
 
 /* QUIZ */
-let current="",quizData=[],i=0;
-
 function start(type){
 i=0;
 
@@ -129,8 +111,6 @@ el.bar.style.width=(i/quizData.length*100)+"%";
 }
 
 function answer(ix,b,qd){
-if(ix===qd.c) b.classList.add("correct");
-else b.classList.add("wrong");
-
+b.classList.add(ix===qd.c?"correct":"wrong");
 setTimeout(()=>{i++;load();},300);
 }
