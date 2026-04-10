@@ -4,66 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAP Trainer</title>
-
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="screen center">
-  <div class="login-box">
-    <h1>LAP Trainer</h1>
+<div id="login" class="center">
+  <div class="card">
+    <h2>LAP Trainer</h2>
 
     <input id="name" placeholder="Username">
     <input id="pw" type="password" placeholder="Passwort">
     <input id="code" placeholder="Code">
 
     <button onclick="login()">Login</button>
-    <button class="secondary" onclick="register()">Registrieren</button>
+    <button onclick="register()">Registrieren</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="app" class="screen">
+<div id="app">
 
-  <!-- TOPBAR -->
   <div class="topbar">
-    <span class="title">Kategorien</span>
-    <button class="logout" onclick="logout()">⎋</button>
+    <h2>Kategorien</h2>
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- CATEGORIES -->
-  <div id="cats" class="list"></div>
+  <div id="cats"></div>
 
-  <!-- MODE -->
-  <div id="mode" class="screen hidden">
-    <div class="panel">
-      <h2 id="catTitle"></h2>
-
-      <button onclick="start('all')">Alle Fragen</button>
-      <button onclick="start('wrong')">Nur falsche</button>
-      <button onclick="start('exam')">🔥 Prüfung</button>
-
-      <button class="secondary" onclick="back()">Zurück</button>
-    </div>
+  <div id="mode" class="hidden">
+    <button onclick="start('all')">Alle Fragen</button>
+    <button onclick="start('wrong')">Nur falsche</button>
+    <button onclick="start('exam')">🔥 Prüfung</button>
+    <button onclick="back()">← Zurück</button>
   </div>
 
-  <!-- QUIZ -->
-  <div id="quiz" class="screen hidden">
-    <div class="quiz-box">
-
-      <div class="progress">
-        <div id="bar"></div>
-      </div>
-
-      <div id="progress"></div>
-      <h2 id="q"></h2>
-
-      <div id="answers"></div>
-
-      <button class="secondary" onclick="back()">Zurück</button>
-    </div>
+  <div id="quiz" class="hidden">
+    <div class="progress"><div id="bar"></div></div>
+    <div id="progress"></div>
+    <h2 id="q"></h2>
+    <div id="answers"></div>
+    <button onclick="back()">← Zurück</button>
   </div>
 
 </div>
