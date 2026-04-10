@@ -27,36 +27,32 @@
 <!-- APP -->
 <div id="app">
 
-  <div class="topbar">
-    <h2>Hallo <span id="user"></span></h2>
-    <button onclick="logout()">Logout</button>
-  </div>
+<div class="topbar">
+  <span id="title">Kategorien</span>
+  <button onclick="logout()">Logout</button>
+</div>
 
-  <!-- DASHBOARD -->
-  <div class="dashboard">
-    <div class="big-circle" id="bigCircle">0%</div>
-    <p id="stats"></p>
-  </div>
+<!-- CATEGORIES -->
+<div id="cats"></div>
 
-  <!-- KATEGORIEN -->
-  <div id="cats"></div>
+<!-- MODE -->
+<div id="mode" class="hidden">
+  <button onclick="start('all')">Alle Fragen</button>
+  <button onclick="start('wrong')">Nur falsche</button>
+  <button onclick="start('exam')">🔥 Prüfung</button>
+  <button onclick="back()">← Zurück</button>
+</div>
 
-  <!-- MODE -->
-  <div id="mode">
-    <button onclick="start('all')">Alle Fragen</button>
-    <button onclick="start('wrong')">Nur falsche</button>
-    <button onclick="start('exam')">🔥 Prüfung</button>
-    <button onclick="home()">Zurück</button>
-  </div>
+<!-- QUIZ -->
+<div id="quiz" class="hidden">
+  <div class="progress"><div id="bar"></div></div>
+  <div id="progress"></div>
 
-  <!-- QUIZ -->
-  <div id="quiz">
-    <div class="progress"><div id="bar" class="bar"></div></div>
-    <div id="progress"></div>
-    <h3 id="q"></h3>
-    <div id="answers"></div>
-    <button onclick="home()">Abbrechen</button>
-  </div>
+  <h2 id="q"></h2>
+  <div id="answers"></div>
+
+  <button onclick="back()">← Zurück</button>
+</div>
 
 </div>
 
