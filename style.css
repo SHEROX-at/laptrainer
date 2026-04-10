@@ -1,11 +1,11 @@
 body{
 margin:0;
-font-family:Arial;
+font-family:'Inter',sans-serif;
 background:#050816;
 color:white;
 }
 
-/* CENTER LOGIN */
+/* LOGIN */
 .center{
 height:100vh;
 display:flex;
@@ -17,16 +17,24 @@ align-items:center;
 background:#0f1325;
 padding:30px;
 width:320px;
+border:1px solid #1f2937;
+animation:fade 0.6s ease;
 }
 
 /* INPUT */
 input{
 width:100%;
-padding:12px;
+padding:14px;
 margin-top:10px;
 background:#0b0f1f;
-border:1px solid #222;
+border:1px solid #1f2937;
 color:white;
+transition:0.2s;
+}
+
+input:focus{
+border-color:#7c3aed;
+transform:scale(1.02);
 }
 
 /* BUTTON */
@@ -38,6 +46,12 @@ background:linear-gradient(135deg,#7c3aed,#a855f7);
 border:none;
 color:white;
 cursor:pointer;
+transition:0.25s;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(124,58,237,0.4);
 }
 
 /* APP */
@@ -46,6 +60,7 @@ display:none;
 padding:20px;
 max-width:900px;
 margin:auto;
+animation:fade 0.4s;
 }
 
 /* TOPBAR */
@@ -62,38 +77,62 @@ margin:20px 0;
 }
 
 .big-circle{
-width:120px;
-height:120px;
+width:130px;
+height:130px;
 border-radius:50%;
 margin:auto;
 display:flex;
 align-items:center;
 justify-content:center;
 background:#1f2937;
-font-size:22px;
+font-size:24px;
+transition:0.6s;
 }
 
 /* CATEGORIES */
 .cat{
-padding:15px;
-margin-top:10px;
+padding:16px;
+margin-top:12px;
 background:#0f1325;
+border:1px solid #1f2937;
 cursor:pointer;
 display:flex;
 justify-content:space-between;
+align-items:center;
+transition:0.25s;
 }
 
-/* MODE */
-#mode{display:none;margin-top:20px;}
+.cat:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 30px rgba(124,58,237,0.2);
+}
+
+/* MINI CIRCLE */
+.circle{
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+background:#1f2937;
+transition:0.6s;
+}
 
 /* QUIZ */
 #quiz{display:none;margin-top:20px;}
 
 .answer{
 background:#0b0f1f;
-border:1px solid #222;
-padding:12px;
+border:1px solid #1f2937;
+padding:14px;
 margin-top:10px;
+transition:0.2s;
+}
+
+.answer:hover{
+transform:scale(1.02);
 }
 
 .correct{background:#22c55e!important;}
@@ -109,4 +148,10 @@ margin-bottom:10px;
 height:100%;
 background:#7c3aed;
 width:0%;
+transition:0.4s;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;}
 }
