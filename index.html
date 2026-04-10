@@ -10,21 +10,28 @@
 
 <body>
 
-<!-- LOGIN -->
 <div id="login" class="center">
   <div class="card">
     <h2>LAP Trainer</h2>
+
     <input id="name" placeholder="Username">
     <input id="pw" type="password" placeholder="Passwort">
+    <input id="code" placeholder="Zugangscode">
+
     <button onclick="login()">Login</button>
     <button onclick="register()">Registrieren</button>
+
+    <p class="hint">Nur mit Code zugänglich</p>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <h2>Hallo <span id="user"></span></h2>
-  <button onclick="logout()">Logout</button>
+  <div class="topbar">
+    <h2>Hallo <span id="user"></span></h2>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <p>🚀 Willkommen im LAP Trainer</p>
 </div>
 
 <script src="script.js"></script>
