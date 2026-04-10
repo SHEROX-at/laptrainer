@@ -11,48 +11,60 @@
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="center">
-  <div class="card">
-    <h2>LAP Trainer</h2>
+<div id="login" class="screen center">
+  <div class="login-box">
+    <h1>LAP Trainer</h1>
 
     <input id="name" placeholder="Username">
     <input id="pw" type="password" placeholder="Passwort">
-    <input id="code" placeholder="Zugangscode">
+    <input id="code" placeholder="Code">
 
     <button onclick="login()">Login</button>
-    <button onclick="register()">Registrieren</button>
+    <button class="secondary" onclick="register()">Registrieren</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="app">
+<div id="app" class="screen">
 
-<div class="topbar">
-  <span id="title">Kategorien</span>
-  <button onclick="logout()">Logout</button>
-</div>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span class="title">Kategorien</span>
+    <button class="logout" onclick="logout()">⎋</button>
+  </div>
 
-<!-- CATEGORIES -->
-<div id="cats"></div>
+  <!-- CATEGORIES -->
+  <div id="cats" class="list"></div>
 
-<!-- MODE -->
-<div id="mode" class="hidden">
-  <button onclick="start('all')">Alle Fragen</button>
-  <button onclick="start('wrong')">Nur falsche</button>
-  <button onclick="start('exam')">🔥 Prüfung</button>
-  <button onclick="back()">← Zurück</button>
-</div>
+  <!-- MODE -->
+  <div id="mode" class="screen hidden">
+    <div class="panel">
+      <h2 id="catTitle"></h2>
 
-<!-- QUIZ -->
-<div id="quiz" class="hidden">
-  <div class="progress"><div id="bar"></div></div>
-  <div id="progress"></div>
+      <button onclick="start('all')">Alle Fragen</button>
+      <button onclick="start('wrong')">Nur falsche</button>
+      <button onclick="start('exam')">🔥 Prüfung</button>
 
-  <h2 id="q"></h2>
-  <div id="answers"></div>
+      <button class="secondary" onclick="back()">Zurück</button>
+    </div>
+  </div>
 
-  <button onclick="back()">← Zurück</button>
-</div>
+  <!-- QUIZ -->
+  <div id="quiz" class="screen hidden">
+    <div class="quiz-box">
+
+      <div class="progress">
+        <div id="bar"></div>
+      </div>
+
+      <div id="progress"></div>
+      <h2 id="q"></h2>
+
+      <div id="answers"></div>
+
+      <button class="secondary" onclick="back()">Zurück</button>
+    </div>
+  </div>
 
 </div>
 
