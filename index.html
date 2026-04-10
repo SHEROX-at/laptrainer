@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAP Trainer PRO</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#070916;
+color:white;
+}
+
+/* CENTER */
+.center{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* CARD */
+.card{
+background:#0f1325;
+padding:30px;
+width:320px;
+}
+
+/* INPUT */
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#0b0f1f;
+border:1px solid #222;
+color:white;
+}
+
+/* BUTTON */
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:linear-gradient(135deg,#7c3aed,#a855f7);
+border:none;
+color:white;
+cursor:pointer;
+}
+
+/* APP */
+#app{display:none;padding:20px;}
+
+.logout{
+background:#ef4444;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="center">
+<div class="card">
+
+<h2>LAP Trainer</h2>
+
+<input id="name" placeholder="Username">
+<input id="pw" type="password" placeholder="Passwort">
+
+<button onclick="login()">Login</button>
+<button onclick="register()">Registrieren</button>
+
+</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<h2>Hallo <span id="user"></span></h2>
+<button class="logout" onclick="logout()">Logout</button>
+
+<p>🎯 Du bist jetzt eingeloggt</p>
+<p>👉 Hier kommt deine App rein</p>
+</div>
+
+<script>
+
+/* USERS */
+let users = JSON.parse(localStorage.getItem("users")) || {};
+
+/* REGISTER */
+function register(){
+let n=name.value.trim();
+let p=pw.value.trim();
+
+if(!n || !p) return alert("Alles ausfüllen");
+
+if(users[n]) return alert("User existiert");
+
+users[n]=p;
+
+localStorage.setItem("users",JSON.stringify(users));
+
+alert("Registriert!");
+}
+
+/* LOGIN */
+function login(){
+let n=name.value.trim();
+let p=pw.value.trim();
+
+if(users[n] !== p) return alert("Falsch");
+
+localStorage.setItem("currentUser",n);
+showApp();
+}
+
+/* SHOW APP */
+function showApp(){
+loginDiv.style.display="none";
+app.style.display="block";
+user.innerText=localStorage.getItem("currentUser");
+}
+
+/* AUTO LOGIN */
+window.onload=()=>{
+let u=localStorage.getItem("currentUser");
+if(u) showApp();
+};
+
+/* LOGOUT */
+function logout(){
+localStorage.removeItem("currentUser");
+location.reload();
+}
+
+</script>
+
+</body>
+</html>
