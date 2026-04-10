@@ -1,44 +1,32 @@
 body{
 margin:0;
-font-family:Inter, sans-serif;
+font-family:Arial;
 background:#050816;
 color:#e5e7eb;
 }
 
-/* SCREENS */
-.screen{
-min-height:100vh;
-padding:20px;
-}
-
-/* CENTER LOGIN */
 .center{
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 }
 
-/* LOGIN */
-.login-box{
-width:100%;
-max-width:380px;
+.card{
+background:#0f1325;
+padding:30px;
+width:320px;
 }
 
-.login-box h1{
-margin-bottom:20px;
-}
-
-/* INPUT */
 input{
 width:100%;
-padding:14px;
+padding:12px;
 margin-top:10px;
 background:#0b0f1f;
 border:1px solid #1f2937;
 color:white;
 }
 
-/* BUTTON */
 button{
 width:100%;
 padding:14px;
@@ -49,11 +37,13 @@ color:white;
 cursor:pointer;
 }
 
-button.secondary{
-background:#111827;
+#app{
+display:none;
+padding:20px;
+max-width:700px;
+margin:auto;
 }
 
-/* TOPBAR */
 .topbar{
 display:flex;
 justify-content:space-between;
@@ -61,78 +51,43 @@ align-items:center;
 margin-bottom:20px;
 }
 
-.title{
-font-size:20px;
-font-weight:600;
-}
-
-.logout{
-width:auto;
-padding:8px 12px;
-background:#ef4444;
-}
-
-/* LIST */
-.list{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-/* CATEGORY CARD */
 .cat{
+padding:15px;
 background:#0f1325;
-padding:18px;
-border:1px solid #1f2937;
-border-radius:12px;
+margin-bottom:10px;
+border-radius:10px;
+cursor:pointer;
 display:flex;
 justify-content:space-between;
-align-items:center;
-cursor:pointer;
-transition:0.2s;
 }
 
-.cat:hover{
-background:#141a33;
-}
-
-/* PROGRESS */
 .circle{
-width:50px;
-height:50px;
+width:40px;
+height:40px;
 border-radius:50%;
 background:#1f2937;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:13px;
+font-size:12px;
 }
 
-/* PANEL */
-.panel{
-max-width:400px;
-margin:auto;
-}
-
-/* QUIZ */
-.quiz-box{
-max-width:600px;
-margin:auto;
+.hidden{
+display:none;
 }
 
 .answer{
-background:#0b0f1f;
-border:1px solid #1f2937;
 padding:14px;
 margin-top:10px;
-border-radius:8px;
+background:#0b0f1f;
+border:1px solid #1f2937;
 }
 
 .correct{background:#22c55e;}
 .wrong{background:#ef4444;}
 
 .progress{
-height:6px;
+height:5px;
 background:#111;
 margin-bottom:10px;
 }
@@ -141,9 +96,4 @@ margin-bottom:10px;
 height:100%;
 background:#7c3aed;
 width:0%;
-}
-
-/* HIDDEN */
-.hidden{
-display:none;
 }
