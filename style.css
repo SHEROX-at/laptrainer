@@ -1,8 +1,8 @@
 body{
 margin:0;
-font-family:'Inter',sans-serif;
+font-family:Inter, sans-serif;
 background:#050816;
-color:white;
+color:#e5e7eb;
 }
 
 /* LOGIN */
@@ -17,8 +17,6 @@ align-items:center;
 background:#0f1325;
 padding:30px;
 width:320px;
-border:1px solid #1f2937;
-animation:fade 0.6s ease;
 }
 
 /* INPUT */
@@ -29,12 +27,6 @@ margin-top:10px;
 background:#0b0f1f;
 border:1px solid #1f2937;
 color:white;
-transition:0.2s;
-}
-
-input:focus{
-border-color:#7c3aed;
-transform:scale(1.02);
 }
 
 /* BUTTON */
@@ -42,116 +34,78 @@ button{
 width:100%;
 padding:14px;
 margin-top:10px;
-background:linear-gradient(135deg,#7c3aed,#a855f7);
+background:#7c3aed;
 border:none;
 color:white;
 cursor:pointer;
-transition:0.25s;
-}
-
-button:hover{
-transform:translateY(-2px);
-box-shadow:0 10px 25px rgba(124,58,237,0.4);
 }
 
 /* APP */
 #app{
 display:none;
-padding:20px;
-max-width:900px;
+max-width:700px;
 margin:auto;
-animation:fade 0.4s;
+padding:20px;
 }
 
 /* TOPBAR */
 .topbar{
 display:flex;
 justify-content:space-between;
-align-items:center;
+margin-bottom:20px;
+font-weight:600;
 }
 
-/* DASHBOARD */
-.dashboard{
-text-align:center;
-margin:20px 0;
-}
-
-.big-circle{
-width:130px;
-height:130px;
-border-radius:50%;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:center;
-background:#1f2937;
-font-size:24px;
-transition:0.6s;
-}
-
-/* CATEGORIES */
+/* CATEGORY CARDS */
 .cat{
-padding:16px;
-margin-top:12px;
+padding:18px;
 background:#0f1325;
 border:1px solid #1f2937;
-cursor:pointer;
+margin-bottom:12px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-transition:0.25s;
+cursor:pointer;
+transition:0.2s;
 }
 
 .cat:hover{
-transform:translateY(-4px);
-box-shadow:0 10px 30px rgba(124,58,237,0.2);
+background:#141a33;
 }
 
-/* MINI CIRCLE */
+/* SMALL CIRCLE */
 .circle{
-width:60px;
-height:60px;
+width:50px;
+height:50px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:14px;
 background:#1f2937;
-transition:0.6s;
+font-size:13px;
 }
 
 /* QUIZ */
-#quiz{display:none;margin-top:20px;}
+.hidden{display:none;}
 
 .answer{
-background:#0b0f1f;
-border:1px solid #1f2937;
 padding:14px;
 margin-top:10px;
-transition:0.2s;
+background:#0b0f1f;
+border:1px solid #1f2937;
 }
 
-.answer:hover{
-transform:scale(1.02);
-}
-
-.correct{background:#22c55e!important;}
-.wrong{background:#ef4444!important;}
+.correct{background:#22c55e;}
+.wrong{background:#ef4444;}
 
 .progress{
-height:6px;
-background:#0b0f1f;
+height:5px;
+background:#111;
 margin-bottom:10px;
 }
 
-.bar{
+#bar{
 height:100%;
 background:#7c3aed;
 width:0%;
-transition:0.4s;
-}
-
-@keyframes fade{
-from{opacity:0;transform:translateY(20px);}
-to{opacity:1;}
 }
