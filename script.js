@@ -1,55 +1,82 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAP Trainer</title>
-<link rel="stylesheet" href="style.css">
-</head>
+const ACCESS_CODES = ["1234","LAP2026"];
 
-<body>
+/* USERS */
+function getUsers(){
+  return JSON.parse(localStorage.getItem("users")) || {};
+}
 
-<!-- LOGIN -->
-<div id="login" class="center">
-  <div class="card">
-    <h2>LAP Trainer</h2>
+function saveUsers(u){
+  localStorage.setItem("users", JSON.stringify(u));
+}
 
-    <input id="name" placeholder="Username">
-    <input id="pw" type="password" placeholder="Passwort">
-    <input id="code" placeholder="Code">
+/* REGISTER */
+function register(){
+  const name = document.getElementById("name").value.trim();
+  const pw = document.getElementById("pw").value.trim();
+  const code = document.getElementById("code").value.trim();
 
-    <button onclick="login()">Login</button>
-    <button onclick="register()">Registrieren</button>
-  </div>
-</div>
+  if(!name || !pw || !code){
+    alert("Bitte alles ausfüllen");
+    return;
+  }
 
-<!-- APP -->
-<div id="app">
+  if(!ACCESS_CODES.includes(code)){
+    alert("Code falsch");
+    return;
+  }
 
-  <div class="topbar">
-    <h2>Kategorien</h2>
-    <button onclick="logout()">Logout</button>
-  </div>
+  let users = getUsers();
 
-  <div id="cats"></div>
+  if(users[name]){
+    alert("User existiert bereits");
+    return;
+  }
 
-  <div id="mode" class="hidden">
-    <button onclick="start('all')">Alle Fragen</button>
-    <button onclick="start('wrong')">Nur falsche</button>
-    <button onclick="start('exam')">🔥 Prüfung</button>
-    <button onclick="back()">← Zurück</button>
-  </div>
+  users[name] = pw;
+  saveUsers(users);
 
-  <div id="quiz" class="hidden">
-    <div class="progress"><div id="bar"></div></div>
-    <div id="progress"></div>
-    <h2 id="q"></h2>
-    <div id="answers"></div>
-    <button onclick="back()">← Zurück</button>
-  </div>
+  alert("Registriert! Jetzt einloggen");
+}
 
-</div>
+/* LOGIN */
+function login(){
+  const name = document.getElementById("name").value.trim();
+  const pw = document.getElementById("pw").value.trim();
 
-<script src="script.js"></script>
-</body>
-</html>
+  let users = getUsers();
+
+  if(!users[name]){
+    alert("User existiert nicht");
+    return;
+  }
+
+  if(users[name] !== pw){
+    alert("Passwort falsch");
+    return;
+  }
+
+  localStorage.setItem("currentUser", name);
+
+  startApp();
+}
+
+/* START APP */
+function startApp(){
+  document.getElementById("login").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  loadCats();
+}
+
+/* AUTO LOGIN */
+window.onload = () => {
+  if(localStorage.getItem("currentUser")){
+    startApp();
+  }
+};
+
+/* LOGOUT */
+function logout(){
+  localStorage.removeItem("currentUser");
+  location.reload();
+}
