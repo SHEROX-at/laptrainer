@@ -73,3 +73,23 @@ border-radius:8px;
 .wrong{background:#ef4444;}
 
 .hidden{display:none;}
+
+.cat{
+transition:0.3s;
+}
+
+.cat:hover{
+transform:translateY(-3px);
+}
+
+.answer{
+transition:0.2s;
+}
+
+.answer:hover{
+transform:scale(1.02);
+}
+
+.view{
+transition:0.3s ease;
+}
