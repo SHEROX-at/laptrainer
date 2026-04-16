@@ -3,46 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAP Trainer</title>
+<title>Login</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="center">
 
-<!-- LOGIN -->
-<div id="login" class="screen center">
-  <div class="card">
-    <h1>LAP Trainer</h1>
+<div class="card">
+  <h2>LAP Trainer</h2>
 
-    <input id="name" placeholder="Username">
-    <input id="pw" type="password" placeholder="Passwort">
-    <input id="code" placeholder="Zugangscode">
+  <input id="name" placeholder="Username">
+  <input id="pw" type="password" placeholder="Passwort">
+  <input id="code" placeholder="Code">
 
-    <button onclick="login()">Login</button>
-    <button class="secondary" onclick="register()">Registrieren</button>
-  </div>
+  <button onclick="login()">Login</button>
+  <button onclick="register()">Registrieren</button>
 </div>
 
-<!-- APP -->
-<div id="app" class="screen hidden">
-
-  <!-- TOP -->
-  <div class="topbar">
-    <div id="title">Kategorien</div>
-    <button onclick="logout()">⎋</button>
-  </div>
-
-  <!-- KATEGORIEN -->
-  <div id="cats" class="view"></div>
-
-  <!-- MODE -->
-  <div id="mode" class="view hidden"></div>
-
-  <!-- QUIZ -->
-  <div id="quiz" class="view hidden"></div>
-
-</div>
-
-<script src="script.js"></script>
+<script src="login.js"></script>
 </body>
 </html>
