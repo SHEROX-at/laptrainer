@@ -1,8 +1,14 @@
 function show(view){
-["cats","mode","quiz"].forEach(v=>{
-document.getElementById(v).classList.add("hidden");
+const views = ["cats","mode","quiz"];
+
+views.forEach(v=>{
+const el = document.getElementById(v);
+if(v === view){
+el.classList.remove("hidden");
+} else {
+el.classList.add("hidden");
+}
 });
-document.getElementById(view).classList.remove("hidden");
 }
 
 function renderCats(){
@@ -31,6 +37,8 @@ renderMode();
 
 cats.appendChild(div);
 });
+
+show("cats");
 }
 
 function renderMode(){
@@ -40,7 +48,7 @@ mode.innerHTML=`
 <button onclick="start('all')">Alle Fragen</button>
 <button onclick="start('wrong')">Nur falsche</button>
 <button onclick="start('exam')">Prüfung</button>
-<button onclick="renderCats()">Zurück</button>
+<button onclick="goBack()">← Zurück</button>
 `;
 
 show("mode");
