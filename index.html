@@ -10,44 +10,36 @@
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="center">
+<div id="login" class="screen center">
   <div class="card">
-    <h2>LAP Trainer</h2>
+    <h1>LAP Trainer</h1>
 
     <input id="name" placeholder="Username">
     <input id="pw" type="password" placeholder="Passwort">
-    <input id="code" placeholder="Code">
+    <input id="code" placeholder="Zugangscode">
 
     <button onclick="login()">Login</button>
-    <button onclick="register()">Registrieren</button>
+    <button class="secondary" onclick="register()">Registrieren</button>
   </div>
 </div>
 
 <!-- APP -->
-<div id="app">
+<div id="app" class="screen hidden">
 
+  <!-- TOP -->
   <div class="topbar">
-    <h2>Kategorien</h2>
-    <button onclick="logout()">Logout</button>
+    <div id="title">Kategorien</div>
+    <button onclick="logout()">⎋</button>
   </div>
 
-  <div id="cats"></div>
+  <!-- KATEGORIEN -->
+  <div id="cats" class="view"></div>
 
-  <div id="mode" class="hidden">
-    <h3 id="catTitle"></h3>
-    <button onclick="start('all')">Alle Fragen</button>
-    <button onclick="start('wrong')">Nur falsche</button>
-    <button onclick="start('exam')">🔥 Prüfung</button>
-    <button onclick="back()">← Zurück</button>
-  </div>
+  <!-- MODE -->
+  <div id="mode" class="view hidden"></div>
 
-  <div id="quiz" class="hidden">
-    <div class="progress"><div id="bar"></div></div>
-    <div id="progress"></div>
-    <h2 id="q"></h2>
-    <div id="answers"></div>
-    <button onclick="back()">← Zurück</button>
-  </div>
+  <!-- QUIZ -->
+  <div id="quiz" class="view hidden"></div>
 
 </div>
 
