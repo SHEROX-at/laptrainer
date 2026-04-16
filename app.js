@@ -1,10 +1,20 @@
+/* LOGIN CHECK */
 if(!localStorage.getItem("user")){
 window.location.href="index.html";
 }
 
-renderCats();
+/* STATE */
+let currentCat = null;
+let quizData = [];
+let index = 0;
+
+let stats = JSON.parse(localStorage.getItem("stats")) || {};
+let wrong = JSON.parse(localStorage.getItem("wrong")) || {};
 
 /* START */
+renderCats();
+
+/* START QUIZ */
 function start(type){
 index = 0;
 
@@ -38,7 +48,7 @@ const quiz = document.getElementById("quiz");
 quiz.innerHTML=`
 <h2>${qd.q}</h2>
 <div id="answers"></div>
-<button onclick="renderMode()">Zurück</button>
+<button onclick="goBack()">← Zurück</button>
 `;
 
 const answers = document.getElementById("answers");
@@ -79,4 +89,17 @@ setTimeout(()=>{
 index++;
 renderQuiz();
 },400);
+}
+
+/* 🔥 BACK FIX */
+function goBack(){
+const quiz = document.getElementById("quiz");
+const mode = document.getElementById("mode");
+
+if(!quiz.classList.contains("hidden")){
+renderMode(); // von Quiz → Mode
+}
+else if(!mode.classList.contains("hidden")){
+renderCats(); // von Mode → Kategorien
+}
 }
