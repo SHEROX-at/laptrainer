@@ -1,6 +1,5 @@
-let currentCat = null;
-let quizData = [];
-let index = 0;
-
-let stats = JSON.parse(localStorage.getItem("stats")) || {};
-let wrong = JSON.parse(localStorage.getItem("wrong")) || {};
+let view = "main"; // main, sub, quiz
+let currentMain = null;
+let currentSub = null;
+let quiz = [];
+let i = 0;
