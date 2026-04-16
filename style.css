@@ -34,7 +34,6 @@ margin-top:10px;
 background:#7c3aed;
 border:none;
 color:white;
-cursor:pointer;
 }
 
 #app{
@@ -47,7 +46,6 @@ margin:auto;
 .topbar{
 display:flex;
 justify-content:space-between;
-align-items:center;
 margin-bottom:20px;
 }
 
@@ -56,9 +54,9 @@ padding:15px;
 background:#0f1325;
 margin-bottom:10px;
 border-radius:10px;
-cursor:pointer;
 display:flex;
 justify-content:space-between;
+cursor:pointer;
 }
 
 .circle{
@@ -72,9 +70,7 @@ justify-content:center;
 font-size:12px;
 }
 
-.hidden{
-display:none;
-}
+.hidden{display:none;}
 
 .answer{
 padding:14px;
