@@ -1,5 +1,16 @@
+/* DEBUG START */
+console.log("APP STARTED");
+
+/* CHECK DB */
+if(typeof db === "undefined"){
+document.getElementById("content").innerHTML = "❌ DB NICHT GELADEN";
+throw new Error("db fehlt");
+}
+
 /* START */
+window.onload = () => {
 renderMain();
+};
 
 /* QUIZ START */
 function startQuiz(data){
@@ -8,7 +19,7 @@ i = 0;
 renderQuiz();
 }
 
-/* PRÜFUNG (ALLE KATEGORIEN) */
+/* PRÜFUNG */
 function startExam(){
 quiz = [];
 
@@ -20,6 +31,7 @@ quiz.push(...arr);
 
 quiz.sort(()=>Math.random()-0.5);
 i = 0;
+
 renderQuiz();
 }
 
@@ -37,10 +49,6 @@ const qd = quiz[i];
 const c = document.getElementById("content");
 
 c.innerHTML = `
-<div class="progress">
-<div class="bar" style="width:${(i/quiz.length)*100}%"></div>
-</div>
-
 <h2>${qd.q}</h2>
 <div id="answers"></div>
 <button onclick="goBack()">← Zurück</button>
@@ -77,10 +85,5 @@ renderQuiz();
 
 /* BACK */
 function goBack(){
-if(view==="quiz"){
-renderSub();
-}
-else{
 renderMain();
-}
 }
