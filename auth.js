@@ -1,28 +1,87 @@
 const ACCESS_CODES = ["1234","LAP2026"];
 
+/* USERS LADEN */
 function getUsers(){
 return JSON.parse(localStorage.getItem("users")) || {};
 }
 
-function register(){
-let n=name.value.trim();
-let p=pw.value.trim();
-let c=code.value.trim();
-
-if(!ACCESS_CODES.includes(c)) return alert("Code falsch");
-
-let u=getUsers();
-u[n]=p;
-localStorage.setItem("users",JSON.stringify(u));
-
-alert("Registriert");
+/* USERS SPEICHERN */
+function saveUsers(users){
+localStorage.setItem("users", JSON.stringify(users));
 }
 
+/* REGISTER */
+function register(){
+const nameInput = document.getElementById("name");
+const pwInput = document.getElementById("pw");
+const codeInput = document.getElementById("code");
+
+const n = nameInput.value.trim();
+const p = pwInput.value.trim();
+const c = codeInput.value.trim();
+
+/* VALIDATION */
+if(!n || !p || !c){
+alert("Bitte alles ausfüllen");
+return;
+}
+
+if(!ACCESS_CODES.includes(c)){
+alert("Code falsch");
+return;
+}
+
+let users = getUsers();
+
+if(users[n]){
+alert("User existiert bereits");
+return;
+}
+
+/* SPEICHERN */
+users[n] = p;
+saveUsers(users);
+
+alert("Registriert! Jetzt einloggen");
+
+/* FELDER LEEREN */
+nameInput.value="";
+pwInput.value="";
+codeInput.value="";
+}
+
+/* LOGIN */
 function login(){
-let u=getUsers();
+const nameInput = document.getElementById("name");
+const pwInput = document.getElementById("pw");
 
-if(u[name.value]!==pw.value) return alert("Falsch");
+const n = nameInput.value.trim();
+const p = pwInput.value.trim();
 
-localStorage.setItem("user",name.value);
-window.location.href="app.html";
+if(!n || !p){
+alert("Bitte Daten eingeben");
+return;
+}
+
+let users = getUsers();
+
+/* CHECK */
+if(!users[n]){
+alert("User existiert nicht");
+return;
+}
+
+if(users[n] !== p){
+alert("Passwort falsch");
+return;
+}
+
+/* LOGIN OK */
+localStorage.setItem("user", n);
+
+/* DEBUG */
+console.log("Login erfolgreich:", n);
+
+/* REDIRECT */
+window.location.href = "app.html";
 }
