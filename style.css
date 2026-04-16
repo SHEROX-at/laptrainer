@@ -1,95 +1,207 @@
-body{
-margin:0;
-font-family:Arial;
-background:#050816;
-color:#e5e7eb;
+const ACCESS_CODES=["1234","LAP2026"];
+
+/* DATABASE */
+const db={
+"Oberbau - Schienen":[
+{q:"Welche Schienenformen gibt es?",a:["71b,60E1,54E2,49E1","nur 60E1","keine","nur 71b"],c:0},
+{q:"Was beinhaltet das Walzzeichen?",a:["Walzwerk,Stahlsorte,Walzjahr,Form","nur Gewicht","nur Baujahr","keine"],c:0},
+{q:"Welche Stahlsorten?",a:["R260,R350HT,R400HT","nur R260","keine","Alu"],c:0}
+],
+"Kleineisen":[
+{q:"Was sind Kleineisen?",a:["Befestigung der Schiene","nur Schrauben","nur Nägel","keine"],c:0}
+]
+};
+
+/* ELEMENTE */
+const el={
+login:document.getElementById("login"),
+app:document.getElementById("app"),
+cats:document.getElementById("cats"),
+mode:document.getElementById("mode"),
+quiz:document.getElementById("quiz"),
+title:document.getElementById("title"),
+name:document.getElementById("name"),
+pw:document.getElementById("pw"),
+code:document.getElementById("code")
+};
+
+/* STATE */
+let currentCat=null;
+let quizData=[];
+let index=0;
+let stats=JSON.parse(localStorage.getItem("stats"))||{};
+let wrong=JSON.parse(localStorage.getItem("wrong"))||{};
+
+/* USERS */
+function getUsers(){return JSON.parse(localStorage.getItem("users"))||{};}
+function saveUsers(u){localStorage.setItem("users",JSON.stringify(u));}
+
+/* AUTH */
+function register(){
+let n=el.name.value.trim();
+let p=el.pw.value.trim();
+let c=el.code.value.trim();
+
+if(!n||!p||!c) return alert("Alles ausfüllen");
+if(!ACCESS_CODES.includes(c)) return alert("Code falsch");
+
+let u=getUsers();
+if(u[n]) return alert("User existiert");
+
+u[n]=p;
+saveUsers(u);
+
+alert("Registriert!");
 }
 
-.center{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
+function login(){
+let u=getUsers();
+if(u[el.name.value]!==el.pw.value) return alert("Falsch");
+
+localStorage.setItem("user",el.name.value);
+showApp();
 }
 
-.card{
-background:#0f1325;
-padding:30px;
-width:320px;
+function logout(){
+localStorage.clear();
+location.reload();
 }
 
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-background:#0b0f1f;
-border:1px solid #1f2937;
-color:white;
+/* INIT */
+function showApp(){
+el.login.classList.add("hidden");
+el.app.classList.remove("hidden");
+renderCats();
 }
 
-button{
-width:100%;
-padding:14px;
-margin-top:10px;
-background:#7c3aed;
-border:none;
-color:white;
+if(localStorage.getItem("user")) showApp();
+
+/* NAVIGATION */
+function show(view){
+["cats","mode","quiz"].forEach(v=>{
+el[v].classList.add("hidden");
+});
+el[view].classList.remove("hidden");
 }
 
-#app{
-display:none;
-padding:20px;
-max-width:700px;
-margin:auto;
+/* KATEGORIEN */
+function renderCats(){
+el.title.innerText="Kategorien";
+el.cats.innerHTML="";
+
+Object.keys(db).forEach(cat=>{
+let s=stats[cat]||{c:0,t:0};
+let p=s.t?Math.round(s.c/s.t*100):0;
+
+let div=document.createElement("div");
+div.className="cat";
+
+div.innerHTML=`
+<div>
+<div style="font-weight:600">${cat}</div>
+<div style="font-size:12px;color:#9ca3af">${s.c}/${s.t} richtig</div>
+</div>
+<div class="circle">${p}%</div>
+`;
+
+div.onclick=()=>{
+currentCat=cat;
+renderMode();
+};
+
+el.cats.appendChild(div);
+});
+
+show("cats");
 }
 
-.topbar{
-display:flex;
-justify-content:space-between;
-margin-bottom:20px;
+/* MODE */
+function renderMode(){
+el.title.innerText=currentCat;
+
+el.mode.innerHTML=`
+<button onclick="startQuiz('all')">Alle Fragen</button>
+<button onclick="startQuiz('wrong')">Nur falsche</button>
+<button onclick="startQuiz('exam')">🔥 Prüfung</button>
+<button onclick="renderCats()">← Zurück</button>
+`;
+
+show("mode");
 }
 
-.cat{
-padding:15px;
-background:#0f1325;
-margin-bottom:10px;
-border-radius:10px;
-display:flex;
-justify-content:space-between;
-cursor:pointer;
+/* QUIZ START */
+function startQuiz(type){
+index=0;
+
+if(type==="exam"){
+quizData=[];
+Object.values(db).forEach(a=>quizData.push(...a));
+quizData.sort(()=>Math.random()-0.5);
+}
+else if(type==="wrong"){
+quizData=db[currentCat].filter(q=>wrong[q.q]);
+}
+else{
+quizData=[...db[currentCat]];
 }
 
-.circle{
-width:40px;
-height:40px;
-border-radius:50%;
-background:#1f2937;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:12px;
+renderQuiz();
 }
 
-.hidden{display:none;}
-
-.answer{
-padding:14px;
-margin-top:10px;
-background:#0b0f1f;
-border:1px solid #1f2937;
+/* QUIZ */
+function renderQuiz(){
+if(index>=quizData.length){
+alert("Fertig!");
+renderCats();
+return;
 }
 
-.correct{background:#22c55e;}
-.wrong{background:#ef4444;}
+let qd=quizData[index];
 
-.progress{
-height:5px;
-background:#111;
-margin-bottom:10px;
+el.quiz.innerHTML=`
+<div class="progress"><div class="bar" style="width:${(index/quizData.length)*100}%"></div></div>
+<div>${index+1}/${quizData.length}</div>
+<h2>${qd.q}</h2>
+<div id="answers"></div>
+<button onclick="renderMode()">← Zurück</button>
+`;
+
+let answersDiv=document.getElementById("answers");
+
+qd.a.forEach((a,i)=>{
+let div=document.createElement("div");
+div.className="answer";
+div.innerText=a;
+
+div.onclick=()=>handleAnswer(i,qd,div);
+
+answersDiv.appendChild(div);
+});
+
+show("quiz");
 }
 
-#bar{
-height:100%;
-background:#7c3aed;
-width:0%;
+/* ANSWER */
+function handleAnswer(i,qd,elDiv){
+let s=stats[currentCat]||{c:0,t:0};
+s.t++;
+
+if(i===qd.c){
+elDiv.classList.add("correct");
+s.c++;
+delete wrong[qd.q];
+}else{
+elDiv.classList.add("wrong");
+wrong[qd.q]=true;
+}
+
+stats[currentCat]=s;
+
+localStorage.setItem("stats",JSON.stringify(stats));
+localStorage.setItem("wrong",JSON.stringify(wrong));
+
+setTimeout(()=>{
+index++;
+renderQuiz();
+},400);
 }
