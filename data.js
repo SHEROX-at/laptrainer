@@ -1,15 +1,13 @@
 const db = {
 "1. Themengebiet Oberbau": {
   "1.1 | Schienen":[
-    {q:" Welche Schienenformen kennen Sie und nennen sie die Abmessungen?",a:["71b,60E1","nur 60E1","keine","nur 71b"],c:0}
+    {q:"Welche Schienenformen kennen Sie und nennen sie die Abmessungen?",a:["71b,60E1","nur 60E1","keine","nur 71b"],c:0}
   ],
   "1.2 | Kleineisen":[
     {q:"Was sind Kleineisen?",a:["Befestigung","nur Schrauben","nur Nägel","keine"],c:0}
-  ]
-},
-"Weichen": {
-  "Grundlagen":[
-    {q:"Funktion?",a:["Gleiswechsel","Stoppen","Bremsen","keine"],c:0}
+  ],
+  "1.3 | Weichen":[
+    {q:"Platzhalter",a:["1","2"],c:0}
   ]
 }
 };
