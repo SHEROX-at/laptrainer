@@ -1,52 +1,41 @@
 function renderMain(){
-console.log("renderMain läuft");
-
-const c = document.getElementById("content");
-
-if(!c){
-alert("❌ content div fehlt!");
-return;
-}
-
+const c=document.getElementById("content");
 c.innerHTML="";
 
-Object.keys(db).forEach(cat=>{
-let div = document.createElement("div");
-div.className="card";
-div.innerText = cat;
+Object.keys(db).forEach((cat,index)=>{
+let div=document.createElement("div");
+div.className="card-item";
+div.innerText=cat;
 
-div.onclick = ()=>{
-currentMain = cat;
+div.onclick=()=>{
+currentMain=cat;
 renderSub();
 };
 
 c.appendChild(div);
+
+setTimeout(()=>div.classList.add("show"),index*100);
 });
-
-/* FALLBACK */
-if(Object.keys(db).length === 0){
-c.innerHTML = "❌ Keine Kategorien gefunden";
-}
 }
 
-/* SUB */
 function renderSub(){
-const c = document.getElementById("content");
+const c=document.getElementById("content");
 c.innerHTML="";
 
-Object.keys(db[currentMain]).forEach(sub=>{
-let div = document.createElement("div");
-div.className="card";
-div.innerText = sub;
+Object.keys(db[currentMain]).forEach((sub,index)=>{
+let div=document.createElement("div");
+div.className="card-item";
+div.innerText=sub;
 
-div.onclick = ()=>{
+div.onclick=()=>{
 startQuiz(db[currentMain][sub]);
 };
 
 c.appendChild(div);
+setTimeout(()=>div.classList.add("show"),index*100);
 });
 
-let back = document.createElement("button");
+let back=document.createElement("button");
 back.innerText="← Zurück";
 back.onclick=renderMain;
 c.appendChild(back);
