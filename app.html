@@ -9,15 +9,14 @@
 
 <body>
 
-<div class="topbar">
-  <h2 id="title">Kategorien</h2>
-  <button onclick="logout()">Logout</button>
+<div class="header">
+  <div id="title">Kategorien</div>
+  <button onclick="startExam()">🔥 Prüfung</button>
 </div>
 
-<div id="cats"></div>
-<div id="mode" class="hidden"></div>
-<div id="quiz" class="hidden"></div>
+<div id="content"></div>
 
+<!-- REIHENFOLGE IST KRITISCH -->
 <script src="data.js"></script>
 <script src="state.js"></script>
 <script src="ui.js"></script>
