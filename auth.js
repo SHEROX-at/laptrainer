@@ -1,28 +1,36 @@
 const ACCESS_CODES = ["1234","LAP2026"];
 
-/* USERS LADEN */
+/* DEBUG HELFER */
+function logUsers(){
+console.log("USERS:", localStorage.getItem("users"));
+}
+
+/* USERS HOLEN */
 function getUsers(){
+try{
 return JSON.parse(localStorage.getItem("users")) || {};
+}catch(e){
+return {};
+}
 }
 
 /* USERS SPEICHERN */
 function saveUsers(users){
 localStorage.setItem("users", JSON.stringify(users));
+logUsers();
 }
 
 /* REGISTER */
 function register(){
-const nameInput = document.getElementById("name");
-const pwInput = document.getElementById("pw");
-const codeInput = document.getElementById("code");
+const n = document.getElementById("name").value.trim();
+const p = document.getElementById("pw").value.trim();
+const c = document.getElementById("code").value.trim();
 
-const n = nameInput.value.trim();
-const p = pwInput.value.trim();
-const c = codeInput.value.trim();
+console.log("REGISTER:", n,p,c);
 
-/* VALIDATION */
+/* CHECKS */
 if(!n || !p || !c){
-alert("Bitte alles ausfüllen");
+alert("Alles ausfüllen");
 return;
 }
 
@@ -33,6 +41,9 @@ return;
 
 let users = getUsers();
 
+/* DEBUG */
+console.log("Vorher:", users);
+
 if(users[n]){
 alert("User existiert bereits");
 return;
@@ -42,30 +53,34 @@ return;
 users[n] = p;
 saveUsers(users);
 
-alert("Registriert! Jetzt einloggen");
+/* TEST */
+let test = getUsers();
 
-/* FELDER LEEREN */
-nameInput.value="";
-pwInput.value="";
-codeInput.value="";
+if(!test[n]){
+alert("FEHLER beim Speichern!");
+return;
+}
+
+alert("Registrierung erfolgreich!");
+
+/* FELDER RESET */
+document.getElementById("name").value="";
+document.getElementById("pw").value="";
+document.getElementById("code").value="";
 }
 
 /* LOGIN */
 function login(){
-const nameInput = document.getElementById("name");
-const pwInput = document.getElementById("pw");
+const n = document.getElementById("name").value.trim();
+const p = document.getElementById("pw").value.trim();
 
-const n = nameInput.value.trim();
-const p = pwInput.value.trim();
-
-if(!n || !p){
-alert("Bitte Daten eingeben");
-return;
-}
+console.log("LOGIN:", n,p);
 
 let users = getUsers();
 
-/* CHECK */
+/* DEBUG */
+console.log("Gespeicherte User:", users);
+
 if(!users[n]){
 alert("User existiert nicht");
 return;
@@ -79,9 +94,7 @@ return;
 /* LOGIN OK */
 localStorage.setItem("user", n);
 
-/* DEBUG */
-console.log("Login erfolgreich:", n);
+alert("Login erfolgreich!");
 
-/* REDIRECT */
 window.location.href = "app.html";
 }
