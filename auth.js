@@ -4,40 +4,25 @@ function getUsers(){
 return JSON.parse(localStorage.getItem("users")) || {};
 }
 
-function saveUsers(u){
-localStorage.setItem("users", JSON.stringify(u));
-}
-
 function register(){
-let n = document.getElementById("name").value.trim();
-let p = document.getElementById("pw").value.trim();
-let c = document.getElementById("code").value.trim();
+let n=name.value.trim();
+let p=pw.value.trim();
+let c=code.value.trim();
 
-if(!n || !p || !c) return alert("Alles ausfüllen");
 if(!ACCESS_CODES.includes(c)) return alert("Code falsch");
 
-let users = getUsers();
-if(users[n]) return alert("User existiert");
+let u=getUsers();
+u[n]=p;
+localStorage.setItem("users",JSON.stringify(u));
 
-users[n] = p;
-saveUsers(users);
-
-alert("Registriert!");
+alert("Registriert");
 }
 
 function login(){
-let n = document.getElementById("name").value.trim();
-let p = document.getElementById("pw").value.trim();
+let u=getUsers();
 
-let users = getUsers();
+if(u[name.value]!==pw.value) return alert("Falsch");
 
-if(users[n] !== p) return alert("Falsch");
-
-localStorage.setItem("user", n);
-window.location.href = "app.html";
-}
-
-function logout(){
-localStorage.removeItem("user");
-window.location.href = "index.html";
+localStorage.setItem("user",name.value);
+window.location.href="app.html";
 }
