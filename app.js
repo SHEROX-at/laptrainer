@@ -1,79 +1,82 @@
-/* CHECK LOGIN */
 if(!localStorage.getItem("user")){
 window.location.href="index.html";
 }
 
-/* DB */
-const db={
-"Schienen":[
-{q:"Schienenformen?",a:["71b,60E1","nur 60E1","keine","nur 71b"],c:0}
-]
-};
+renderCats();
 
-let current="",quizData=[],i=0;
+/* START */
+function start(type){
+index = 0;
 
-/* CATS */
-function loadCats(){
-cats.innerHTML="";
-
-Object.keys(db).forEach(cat=>{
-let div=document.createElement("div");
-div.className="cat";
-div.innerText=cat;
-div.onclick=()=>openCat(cat);
-cats.appendChild(div);
-});
+if(type==="exam"){
+quizData=[];
+Object.values(db).forEach(a=>quizData.push(...a));
+quizData.sort(()=>Math.random()-0.5);
+}
+else if(type==="wrong"){
+quizData = db[currentCat].filter(q=>wrong[q.q]);
+}
+else{
+quizData = [...db[currentCat]];
 }
 
-function openCat(c){
-current=c;
-mode.innerHTML=`
-<button onclick="start()">Start</button>
-<button onclick="loadCats()">Zurück</button>
-`;
-cats.style.display="none";
-mode.classList.remove("hidden");
+renderQuiz();
 }
 
 /* QUIZ */
-function start(){
-quizData=[...db[current]];
-i=0;
-
-mode.classList.add("hidden");
-quiz.classList.remove("hidden");
-
-load();
-}
-
-function load(){
-if(i>=quizData.length){
-alert("Fertig");
-location.reload();
+function renderQuiz(){
+if(index >= quizData.length){
+alert("Fertig!");
+renderCats();
 return;
 }
 
-let qd=quizData[i];
-quiz.innerHTML=`<h2>${qd.q}</h2><div id="a"></div>`;
+let qd = quizData[index];
 
-qd.a.forEach((x,ix)=>{
-let b=document.createElement("div");
-b.className="answer";
-b.innerText=x;
-b.onclick=()=>ans(ix,qd,b);
-a.appendChild(b);
+const quiz = document.getElementById("quiz");
+
+quiz.innerHTML=`
+<h2>${qd.q}</h2>
+<div id="answers"></div>
+<button onclick="renderMode()">Zurück</button>
+`;
+
+const answers = document.getElementById("answers");
+
+qd.a.forEach((a,i)=>{
+let div=document.createElement("div");
+div.className="answer";
+div.innerText=a;
+
+div.onclick=()=>answer(i,qd,div);
+
+answers.appendChild(div);
 });
+
+show("quiz");
 }
 
-function ans(ix,qd,b){
-b.classList.add(ix===qd.c?"correct":"wrong");
-setTimeout(()=>{i++;load();},400);
+/* ANSWER */
+function answer(i,qd,el){
+let s = stats[currentCat] || {c:0,t:0};
+s.t++;
+
+if(i===qd.c){
+el.classList.add("correct");
+s.c++;
+delete wrong[qd.q];
+}else{
+el.classList.add("wrong");
+wrong[qd.q]=true;
 }
 
-/* LOGOUT */
-function logout(){
-localStorage.removeItem("user");
-window.location.href="index.html";
-}
+stats[currentCat]=s;
 
-loadCats();
+localStorage.setItem("stats",JSON.stringify(stats));
+localStorage.setItem("wrong",JSON.stringify(wrong));
+
+setTimeout(()=>{
+index++;
+renderQuiz();
+},400);
+}
