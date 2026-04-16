@@ -3,21 +3,20 @@ if(!localStorage.getItem("user")){
 window.location.href="index.html";
 }
 
-/* START */
 window.onload=()=>{
 renderMain();
 };
 
 /* QUIZ */
 function startQuiz(data){
-quiz=[...data];
-i=0;
+quiz = [...data];
+i = 0;
 renderQuiz();
 }
 
 /* PRÜFUNG */
 function startExam(){
-quiz=[];
+quiz = [];
 
 Object.values(db).forEach(subs=>{
 Object.values(subs).forEach(arr=>{
@@ -26,7 +25,7 @@ quiz.push(...arr);
 });
 
 quiz.sort(()=>Math.random()-0.5);
-i=0;
+i = 0;
 
 renderQuiz();
 }
@@ -57,7 +56,24 @@ div.className="answer";
 div.innerText=x;
 
 div.onclick=()=>{
-div.classList.add(ix===qd.c?"correct":"wrong");
+
+let cat=currentMain;
+
+if(!stats[cat]){
+stats[cat]={correct:0,wrong:0,total:0};
+}
+
+stats[cat].total++;
+
+if(ix===qd.c){
+div.classList.add("correct");
+stats[cat].correct++;
+}else{
+div.classList.add("wrong");
+stats[cat].wrong++;
+}
+
+localStorage.setItem("stats",JSON.stringify(stats));
 
 setTimeout(()=>{
 i++;
