@@ -1,25 +1,16 @@
-function setTitle(text){
-document.getElementById("title").innerText = text;
-}
-
-function animate(el, delay=0){
-el.style.opacity = 0;
-el.style.transform = "translateY(20px)";
-setTimeout(()=>{
-el.style.opacity = 1;
-el.style.transform = "translateY(0)";
-}, delay);
-}
-
-/* MAIN */
 function renderMain(){
-view="main";
-setTitle("Kategorien");
+console.log("renderMain läuft");
 
 const c = document.getElementById("content");
+
+if(!c){
+alert("❌ content div fehlt!");
+return;
+}
+
 c.innerHTML="";
 
-Object.keys(db).forEach((cat,index)=>{
+Object.keys(db).forEach(cat=>{
 let div = document.createElement("div");
 div.className="card";
 div.innerText = cat;
@@ -30,33 +21,31 @@ renderSub();
 };
 
 c.appendChild(div);
-animate(div, index*80);
 });
+
+/* FALLBACK */
+if(Object.keys(db).length === 0){
+c.innerHTML = "❌ Keine Kategorien gefunden";
+}
 }
 
 /* SUB */
 function renderSub(){
-view="sub";
-setTitle(currentMain);
-
 const c = document.getElementById("content");
 c.innerHTML="";
 
-Object.keys(db[currentMain]).forEach((sub,index)=>{
+Object.keys(db[currentMain]).forEach(sub=>{
 let div = document.createElement("div");
 div.className="card";
 div.innerText = sub;
 
 div.onclick = ()=>{
-currentSub = sub;
 startQuiz(db[currentMain][sub]);
 };
 
 c.appendChild(div);
-animate(div, index*80);
 });
 
-/* BACK */
 let back = document.createElement("button");
 back.innerText="← Zurück";
 back.onclick=renderMain;
