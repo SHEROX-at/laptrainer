@@ -11,6 +11,7 @@ el.classList.add("hidden");
 });
 }
 
+/* KATEGORIEN */
 function renderCats(){
 const cats = document.getElementById("cats");
 cats.innerHTML="";
@@ -41,6 +42,7 @@ cats.appendChild(div);
 show("cats");
 }
 
+/* MODE */
 function renderMode(){
 const mode = document.getElementById("mode");
 
