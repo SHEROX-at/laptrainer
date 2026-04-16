@@ -1,27 +1,23 @@
-/* DEBUG START */
-console.log("APP STARTED");
-
-/* CHECK DB */
-if(typeof db === "undefined"){
-document.getElementById("content").innerHTML = "❌ DB NICHT GELADEN";
-throw new Error("db fehlt");
+/* LOGIN CHECK */
+if(!localStorage.getItem("user")){
+window.location.href="index.html";
 }
 
 /* START */
-window.onload = () => {
+window.onload=()=>{
 renderMain();
 };
 
-/* QUIZ START */
+/* QUIZ */
 function startQuiz(data){
-quiz = [...data];
-i = 0;
+quiz=[...data];
+i=0;
 renderQuiz();
 }
 
 /* PRÜFUNG */
 function startExam(){
-quiz = [];
+quiz=[];
 
 Object.values(db).forEach(subs=>{
 Object.values(subs).forEach(arr=>{
@@ -30,60 +26,45 @@ quiz.push(...arr);
 });
 
 quiz.sort(()=>Math.random()-0.5);
-i = 0;
+i=0;
 
 renderQuiz();
 }
 
-/* QUIZ */
+/* RENDER QUIZ */
 function renderQuiz(){
-view="quiz";
+const c=document.getElementById("content");
 
-if(i >= quiz.length){
-alert("Fertig!");
+if(i>=quiz.length){
+alert("Fertig");
 renderMain();
 return;
 }
 
-const qd = quiz[i];
-const c = document.getElementById("content");
+let qd=quiz[i];
 
-c.innerHTML = `
+c.innerHTML=`
 <h2>${qd.q}</h2>
 <div id="answers"></div>
-<button onclick="goBack()">← Zurück</button>
+<button onclick="renderMain()">← Zurück</button>
 `;
 
-const answers = document.getElementById("answers");
+const a=document.getElementById("answers");
 
-qd.a.forEach((a,index)=>{
-let div = document.createElement("div");
+qd.a.forEach((x,ix)=>{
+let div=document.createElement("div");
 div.className="answer";
-div.innerText=a;
+div.innerText=x;
 
 div.onclick=()=>{
-handleAnswer(index, qd, div);
-};
-
-answers.appendChild(div);
-});
-}
-
-/* ANSWER */
-function handleAnswer(index,qd,el){
-if(index===qd.c){
-el.classList.add("correct");
-}else{
-el.classList.add("wrong");
-}
+div.classList.add(ix===qd.c?"correct":"wrong");
 
 setTimeout(()=>{
 i++;
 renderQuiz();
 },400);
-}
+};
 
-/* BACK */
-function goBack(){
-renderMain();
+a.appendChild(div);
+});
 }
