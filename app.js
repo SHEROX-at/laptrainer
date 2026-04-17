@@ -1,133 +1,102 @@
-/* AUTH CHECK */
-checkAuth();
+/* ROOT */
+const root = document.getElementById("app");
 
-/* GLOBAL */
-let currentCategory = null;
-let currentSub = null;
-let questions = [];
-let currentIndex = 0;
-let score = { correct: 0, wrong: 0 };
-
-/* LOAD DB */
+/* DATABASE */
 const dbData = typeof db !== "undefined" ? db : {};
 
-/* UI ROOT */
-const root = document.querySelector(".grid");
-
-/* -------------------- DASHBOARD -------------------- */
+/* ---------------- DASHBOARD ---------------- */
 
 function renderDashboard() {
   root.innerHTML = `
-    <div class="big-card" onclick="showCategories()">
-      📚 Lernen
-    </div>
-
-    <div class="big-card" onclick="startExam()">
-      🧠 Prüfung (alle Fragen)
-    </div>
-
-    <div class="big-card" onclick="openPDF()">
-      📄 PDF ansehen
-    </div>
+    <div class="big-card" onclick="showCategories()">📚 Lernen</div>
+    <div class="big-card" onclick="startExam()">🧠 Prüfung</div>
+    <div class="big-card" onclick="openPDF()">📄 PDF</div>
   `;
 }
 
-/* -------------------- KATEGORIEN -------------------- */
+/* ---------------- KATEGORIEN ---------------- */
 
 function showCategories() {
   root.innerHTML = "";
 
   Object.keys(dbData).forEach(cat => {
     root.innerHTML += `
-      <div class="big-card" onclick="showSubs('${cat}')">
-        ${cat}
-      </div>
+      <div class="big-card" onclick="showSubs('${cat}')">${cat}</div>
     `;
   });
 
   addBack(renderDashboard);
 }
 
-/* -------------------- UNTERKATEGORIEN -------------------- */
+/* ---------------- UNTERKATEGORIEN ---------------- */
 
 function showSubs(cat) {
-  currentCategory = cat;
   root.innerHTML = "";
 
   Object.keys(dbData[cat]).forEach(sub => {
     root.innerHTML += `
-      <div class="big-card" onclick="startQuiz('${cat}','${sub}')">
-        ${sub}
-      </div>
+      <div class="big-card" onclick="startQuiz('${cat}','${sub}')">${sub}</div>
     `;
   });
 
   addBack(showCategories);
 }
 
-/* -------------------- QUIZ START -------------------- */
+/* ---------------- QUIZ ---------------- */
+
+let questions = [];
+let index = 0;
+let correct = 0;
+let wrong = 0;
 
 function startQuiz(cat, sub) {
-  currentCategory = cat;
-  currentSub = sub;
   questions = dbData[cat][sub];
-  currentIndex = 0;
-  score = { correct: 0, wrong: 0 };
+  index = 0;
+  correct = 0;
+  wrong = 0;
 
   showQuestion();
 }
 
-/* -------------------- FRAGE -------------------- */
-
 function showQuestion() {
-  if (currentIndex >= questions.length) {
+  if (index >= questions.length) {
     showResult();
     return;
   }
 
-  const q = questions[currentIndex];
+  const q = questions[index];
 
   root.innerHTML = `
     <div class="big-card">
       <h3>${q.q}</h3>
 
-      ${q.a.map((ans, i) => `
-        <button class="btn" onclick="answer(${i})">${ans}</button>
+      ${q.a.map((a,i)=>`
+        <button class="btn" onclick="answer(${i})">${a}</button>
       `).join("")}
     </div>
   `;
 }
 
-/* -------------------- ANTWORT -------------------- */
-
 function answer(i) {
-  const q = questions[currentIndex];
+  if (i === questions[index].c) correct++;
+  else wrong++;
 
-  if (i === q.c) {
-    score.correct++;
-  } else {
-    score.wrong++;
-  }
-
-  currentIndex++;
+  index++;
   showQuestion();
 }
-
-/* -------------------- ERGEBNIS -------------------- */
 
 function showResult() {
   root.innerHTML = `
     <div class="big-card">
       <h2>Ergebnis</h2>
-      <p>✅ Richtig: ${score.correct}</p>
-      <p>❌ Falsch: ${score.wrong}</p>
-
-      <button class="btn" onclick="showCategories()">Weiter</button>
+      <p>✅ ${correct}</p>
+      <p>❌ ${wrong}</p>
+      <button class="btn" onclick="renderDashboard()">Zurück</button>
     </div>
   `;
 }
 
-/* -------------------- PRÜFUNG (ALLE FRAGEN) -------------------- */
+/* ---------------- PRÜFUNG ---------------- */
 
 function startExam() {
   questions = [];
@@ -140,13 +109,14 @@ function startExam() {
 
   questions = shuffle(questions).slice(0, 80);
 
-  currentIndex = 0;
-  score = { correct: 0, wrong: 0 };
+  index = 0;
+  correct = 0;
+  wrong = 0;
 
   showQuestion();
 }
 
-/* -------------------- UTIL -------------------- */
+/* ---------------- UTIL ---------------- */
 
 function shuffle(arr) {
   return arr.sort(() => Math.random() - 0.5);
@@ -156,12 +126,14 @@ function openPDF() {
   window.location.href = "pdf.html";
 }
 
-/* BACK BUTTON */
 function addBack(fn) {
   root.innerHTML += `
-    <button class="btn btn2" onclick="(${fn.toString()})()">⬅ Zurück</button>
+    <button class="btn" onclick="(${fn.toString()})()">⬅ Zurück</button>
   `;
 }
 
-/* INIT */
-renderDashboard();
+/* ---------------- INIT ---------------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderDashboard();
+});
