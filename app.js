@@ -1,176 +1,112 @@
 const root = document.getElementById("root");
 
-/* ---------- NAV ---------- */
+/* ========= STATE ========= */
+let questions = [];
+let currentIndex = 0;
+let userAnswers = [];
 
-function showMenu() {
-  root.innerHTML = "";
-
-  const grid = document.createElement("div");
-  grid.className = "menu";
-
-  grid.innerHTML = `
-    <div class="card" onclick="showCategories()">📚 Lernen</div>
-    <div class="card" onclick="startExam()">🧠 Prüfung</div>
-    <div class="card" onclick="openPDF()">📄 PDF ansehen</div>
-  `;
-
-  root.appendChild(grid);
-}
-
-/* ---------- BACK BUTTON ---------- */
-
-function addBack(fn) {
-  const btn = document.createElement("button");
-  btn.className = "back-btn";
-  btn.innerText = "⬅ Zurück";
-  btn.onclick = fn;
-
-  root.appendChild(btn);
-}
-
-/* ---------- KATEGORIEN ---------- */
-
-function showCategories() {
-  root.innerHTML = "";
-
-  Object.keys(db).forEach(cat => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerText = cat;
-    el.onclick = () => showSub(cat);
-    root.appendChild(el);
-  });
-
-  addBack(showMenu);
-}
-
-/* ---------- UNTERKATEGORIEN ---------- */
-
-function showSub(cat) {
-  root.innerHTML = "";
-
-  Object.keys(db[cat]).forEach(sub => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerText = sub;
-    el.onclick = () => startQuiz(cat, sub);
-    root.appendChild(el);
-  });
-
-  addBack(showCategories);
-}
-
-/* ---------- QUIZ ---------- */
-
-let current = [];
-
+/* ========= START ========= */
 function startQuiz(cat, sub) {
-  current = db[cat][sub];
-  let i = 0;
-  let score = 0;
+  questions = shuffle([...db[cat][sub]]);
+  currentIndex = 0;
+  userAnswers = [];
 
-  function render() {
-    root.innerHTML = "";
-
-    if (i >= current.length) {
-      root.innerHTML = `
-        <div class="result">
-          Ergebnis: ${score}/${current.length}
-        </div>
-      `;
-      addBack(showCategories);
-      return;
-    }
-
-    const q = current[i];
-
-    const box = document.createElement("div");
-    box.className = "question";
-
-    box.innerHTML = `<h2>${q.q}</h2>`;
-
-    q.a.forEach((ans, index) => {
-      const btn = document.createElement("div");
-      btn.className = "answer";
-      btn.innerText = ans;
-
-      btn.onclick = () => {
-        if (index === q.c) score++;
-        i++;
-        render();
-      };
-
-      box.appendChild(btn);
-    });
-
-    root.appendChild(box);
-  }
-
-  render();
+  showQuestion();
 }
 
-/* ---------- PRÜFUNG ---------- */
+/* ========= SHOW QUESTION ========= */
+function showQuestion() {
+  root.innerHTML = "";
 
-function startExam() {
-  let all = [];
+  const q = questions[currentIndex];
 
-  Object.values(db).forEach(cat => {
-    Object.values(cat).forEach(sub => {
-      all = all.concat(sub);
-    });
+  // Antworten mischen + richtige merken
+  const answers = shuffle(
+    q.a.map((text, i) => ({
+      text,
+      correct: i === q.c
+    }))
+  );
+
+  const selected = new Set();
+
+  const box = document.createElement("div");
+  box.className = "question";
+
+  box.innerHTML = `<h2>${q.q}</h2>`;
+
+  answers.forEach((ans, i) => {
+    const btn = document.createElement("div");
+    btn.className = "answer";
+    btn.innerText = ans.text;
+
+    btn.onclick = () => {
+      if (selected.has(i)) {
+        selected.delete(i);
+        btn.style.background = "";
+      } else {
+        selected.add(i);
+        btn.style.background = "#7c3aed";
+      }
+    };
+
+    box.appendChild(btn);
   });
 
-  current = all.sort(() => Math.random() - 0.5).slice(0, 20);
+  const next = document.createElement("button");
+  next.className = "btn";
+  next.innerText = "Weiter";
 
-  let i = 0;
-  let score = 0;
-
-  function render() {
-    root.innerHTML = "";
-
-    if (i >= current.length) {
-      root.innerHTML = `
-        <div class="result">
-          Prüfung: ${score}/${current.length}
-        </div>
-      `;
-      addBack(showMenu);
-      return;
-    }
-
-    const q = current[i];
-
-    const box = document.createElement("div");
-    box.className = "question";
-
-    box.innerHTML = `<h2>${q.q}</h2>`;
-
-    q.a.forEach((ans, index) => {
-      const btn = document.createElement("div");
-      btn.className = "answer";
-      btn.innerText = ans;
-
-      btn.onclick = () => {
-        if (index === q.c) score++;
-        i++;
-        render();
-      };
-
-      box.appendChild(btn);
+  next.onclick = () => {
+    // speichern
+    userAnswers.push({
+      question: q.q,
+      answers: answers,
+      selected: [...selected]
     });
 
-    root.appendChild(box);
-  }
+    currentIndex++;
 
-  render();
+    if (currentIndex >= questions.length) {
+      showResult();
+    } else {
+      showQuestion();
+    }
+  };
+
+  root.appendChild(box);
+  root.appendChild(next);
 }
 
-/* ---------- PDF ---------- */
+/* ========= RESULT ========= */
+function showResult() {
+  root.innerHTML = "<h2>Ergebnis</h2>";
 
-function openPDF() {
-  window.location.href = "pdf.html";
+  userAnswers.forEach((q, idx) => {
+    const block = document.createElement("div");
+    block.className = "result-block";
+
+    let html = `<h3>${idx + 1}. ${q.question}</h3>`;
+
+    q.answers.forEach((a, i) => {
+      const isSelected = q.selected.includes(i);
+
+      let color = "";
+      if (a.correct && isSelected) color = "green";
+      else if (!a.correct && isSelected) color = "red";
+      else if (a.correct) color = "lightgreen";
+
+      html += `<div style="color:${color}">${a.text}</div>`;
+    });
+
+    block.innerHTML = html;
+    root.appendChild(block);
+  });
+
+  const back = document.createElement("button");
+  back.className = "btn";
+  back.innerText = "Zurück";
+  back.onclick = showMenu;
+
+  root.appendChild(back);
 }
-
-/* ---------- INIT ---------- */
-
-showMenu();
