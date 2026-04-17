@@ -1,3 +1,10 @@
+function shuffle(arr) {
+  return arr
+    .map(a => ({sort: Math.random(), value: a}))
+    .sort((a, b) => a.sort - b.sort)
+    .map(a => a.value);
+}
+
 const db = {
 
 "1. Themengebiet Oberbau": {
