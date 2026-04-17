@@ -76,6 +76,12 @@ iframe {
 </div>
 
 <script>
+if (!localStorage.getItem("user")) {
+  window.location.href = "index.html";
+}
+</script>
+  
+<script>
 function goBack() {
   window.history.back();
 }
