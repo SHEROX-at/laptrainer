@@ -1,139 +1,176 @@
-/* ROOT */
-const root = document.getElementById("app");
+const root = document.getElementById("root");
 
-/* DATABASE */
-const dbData = typeof db !== "undefined" ? db : {};
+/* ---------- NAV ---------- */
 
-/* ---------------- DASHBOARD ---------------- */
+function showMenu() {
+  root.innerHTML = "";
 
-function renderDashboard() {
-  root.innerHTML = `
-    <div class="big-card" onclick="showCategories()">📚 Lernen</div>
-    <div class="big-card" onclick="startExam()">🧠 Prüfung</div>
-    <div class="big-card" onclick="openPDF()">📄 PDF</div>
+  const grid = document.createElement("div");
+  grid.className = "menu";
+
+  grid.innerHTML = `
+    <div class="card" onclick="showCategories()">📚 Lernen</div>
+    <div class="card" onclick="startExam()">🧠 Prüfung</div>
+    <div class="card" onclick="openPDF()">📄 PDF ansehen</div>
   `;
+
+  root.appendChild(grid);
 }
 
-/* ---------------- KATEGORIEN ---------------- */
+/* ---------- BACK BUTTON ---------- */
+
+function addBack(fn) {
+  const btn = document.createElement("button");
+  btn.className = "back-btn";
+  btn.innerText = "⬅ Zurück";
+  btn.onclick = fn;
+
+  root.appendChild(btn);
+}
+
+/* ---------- KATEGORIEN ---------- */
 
 function showCategories() {
   root.innerHTML = "";
 
-  Object.keys(dbData).forEach(cat => {
-    root.innerHTML += `
-      <div class="big-card" onclick="showSubs('${cat}')">${cat}</div>
-    `;
+  Object.keys(db).forEach(cat => {
+    const el = document.createElement("div");
+    el.className = "card";
+    el.innerText = cat;
+    el.onclick = () => showSub(cat);
+    root.appendChild(el);
   });
 
-  addBack(renderDashboard);
+  addBack(showMenu);
 }
 
-/* ---------------- UNTERKATEGORIEN ---------------- */
+/* ---------- UNTERKATEGORIEN ---------- */
 
-function showSubs(cat) {
+function showSub(cat) {
   root.innerHTML = "";
 
-  Object.keys(dbData[cat]).forEach(sub => {
-    root.innerHTML += `
-      <div class="big-card" onclick="startQuiz('${cat}','${sub}')">${sub}</div>
-    `;
+  Object.keys(db[cat]).forEach(sub => {
+    const el = document.createElement("div");
+    el.className = "card";
+    el.innerText = sub;
+    el.onclick = () => startQuiz(cat, sub);
+    root.appendChild(el);
   });
 
   addBack(showCategories);
 }
 
-/* ---------------- QUIZ ---------------- */
+/* ---------- QUIZ ---------- */
 
-let questions = [];
-let index = 0;
-let correct = 0;
-let wrong = 0;
+let current = [];
 
 function startQuiz(cat, sub) {
-  questions = dbData[cat][sub];
-  index = 0;
-  correct = 0;
-  wrong = 0;
+  current = db[cat][sub];
+  let i = 0;
+  let score = 0;
 
-  showQuestion();
-}
+  function render() {
+    root.innerHTML = "";
 
-function showQuestion() {
-  if (index >= questions.length) {
-    showResult();
-    return;
+    if (i >= current.length) {
+      root.innerHTML = `
+        <div class="result">
+          Ergebnis: ${score}/${current.length}
+        </div>
+      `;
+      addBack(showCategories);
+      return;
+    }
+
+    const q = current[i];
+
+    const box = document.createElement("div");
+    box.className = "question";
+
+    box.innerHTML = `<h2>${q.q}</h2>`;
+
+    q.a.forEach((ans, index) => {
+      const btn = document.createElement("div");
+      btn.className = "answer";
+      btn.innerText = ans;
+
+      btn.onclick = () => {
+        if (index === q.c) score++;
+        i++;
+        render();
+      };
+
+      box.appendChild(btn);
+    });
+
+    root.appendChild(box);
   }
 
-  const q = questions[index];
-
-  root.innerHTML = `
-    <div class="big-card">
-      <h3>${q.q}</h3>
-
-      ${q.a.map((a,i)=>`
-        <button class="btn" onclick="answer(${i})">${a}</button>
-      `).join("")}
-    </div>
-  `;
+  render();
 }
 
-function answer(i) {
-  if (i === questions[index].c) correct++;
-  else wrong++;
-
-  index++;
-  showQuestion();
-}
-
-function showResult() {
-  root.innerHTML = `
-    <div class="big-card">
-      <h2>Ergebnis</h2>
-      <p>✅ ${correct}</p>
-      <p>❌ ${wrong}</p>
-      <button class="btn" onclick="renderDashboard()">Zurück</button>
-    </div>
-  `;
-}
-
-/* ---------------- PRÜFUNG ---------------- */
+/* ---------- PRÜFUNG ---------- */
 
 function startExam() {
-  questions = [];
+  let all = [];
 
-  Object.keys(dbData).forEach(cat => {
-    Object.keys(dbData[cat]).forEach(sub => {
-      questions.push(...dbData[cat][sub]);
+  Object.values(db).forEach(cat => {
+    Object.values(cat).forEach(sub => {
+      all = all.concat(sub);
     });
   });
 
-  questions = shuffle(questions).slice(0, 80);
+  current = all.sort(() => Math.random() - 0.5).slice(0, 20);
 
-  index = 0;
-  correct = 0;
-  wrong = 0;
+  let i = 0;
+  let score = 0;
 
-  showQuestion();
+  function render() {
+    root.innerHTML = "";
+
+    if (i >= current.length) {
+      root.innerHTML = `
+        <div class="result">
+          Prüfung: ${score}/${current.length}
+        </div>
+      `;
+      addBack(showMenu);
+      return;
+    }
+
+    const q = current[i];
+
+    const box = document.createElement("div");
+    box.className = "question";
+
+    box.innerHTML = `<h2>${q.q}</h2>`;
+
+    q.a.forEach((ans, index) => {
+      const btn = document.createElement("div");
+      btn.className = "answer";
+      btn.innerText = ans;
+
+      btn.onclick = () => {
+        if (index === q.c) score++;
+        i++;
+        render();
+      };
+
+      box.appendChild(btn);
+    });
+
+    root.appendChild(box);
+  }
+
+  render();
 }
 
-/* ---------------- UTIL ---------------- */
-
-function shuffle(arr) {
-  return arr.sort(() => Math.random() - 0.5);
-}
+/* ---------- PDF ---------- */
 
 function openPDF() {
   window.location.href = "pdf.html";
 }
 
-function addBack(fn) {
-  root.innerHTML += `
-    <button class="btn" onclick="(${fn.toString()})()">⬅ Zurück</button>
-  `;
-}
+/* ---------- INIT ---------- */
 
-/* ---------------- INIT ---------------- */
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderDashboard();
-});
+showMenu();
