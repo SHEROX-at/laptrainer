@@ -1,90 +1,167 @@
-/* LOGIN CHECK */
-if(!localStorage.getItem("user")){
-window.location.href="index.html";
+/* AUTH CHECK */
+checkAuth();
+
+/* GLOBAL */
+let currentCategory = null;
+let currentSub = null;
+let questions = [];
+let currentIndex = 0;
+let score = { correct: 0, wrong: 0 };
+
+/* LOAD DB */
+const dbData = typeof db !== "undefined" ? db : {};
+
+/* UI ROOT */
+const root = document.querySelector(".grid");
+
+/* -------------------- DASHBOARD -------------------- */
+
+function renderDashboard() {
+  root.innerHTML = `
+    <div class="big-card" onclick="showCategories()">
+      📚 Lernen
+    </div>
+
+    <div class="big-card" onclick="startExam()">
+      🧠 Prüfung (alle Fragen)
+    </div>
+
+    <div class="big-card" onclick="openPDF()">
+      📄 PDF ansehen
+    </div>
+  `;
 }
 
-window.onload=()=>{
-renderMain();
-};
+/* -------------------- KATEGORIEN -------------------- */
 
-/* QUIZ */
-function startQuiz(data){
-quiz = [...data];
-i = 0;
-renderQuiz();
+function showCategories() {
+  root.innerHTML = "";
+
+  Object.keys(dbData).forEach(cat => {
+    root.innerHTML += `
+      <div class="big-card" onclick="showSubs('${cat}')">
+        ${cat}
+      </div>
+    `;
+  });
+
+  addBack(renderDashboard);
 }
 
-/* PRÜFUNG */
-function startExam(){
-quiz = [];
+/* -------------------- UNTERKATEGORIEN -------------------- */
 
-Object.values(db).forEach(subs=>{
-Object.values(subs).forEach(arr=>{
-quiz.push(...arr);
-});
-});
+function showSubs(cat) {
+  currentCategory = cat;
+  root.innerHTML = "";
 
-quiz.sort(()=>Math.random()-0.5);
-i = 0;
+  Object.keys(dbData[cat]).forEach(sub => {
+    root.innerHTML += `
+      <div class="big-card" onclick="startQuiz('${cat}','${sub}')">
+        ${sub}
+      </div>
+    `;
+  });
 
-renderQuiz();
+  addBack(showCategories);
 }
 
-/* RENDER QUIZ */
-function renderQuiz(){
-const c=document.getElementById("content");
+/* -------------------- QUIZ START -------------------- */
 
-if(i>=quiz.length){
-alert("Fertig");
-renderMain();
-return;
+function startQuiz(cat, sub) {
+  currentCategory = cat;
+  currentSub = sub;
+  questions = dbData[cat][sub];
+  currentIndex = 0;
+  score = { correct: 0, wrong: 0 };
+
+  showQuestion();
 }
 
-let qd=quiz[i];
+/* -------------------- FRAGE -------------------- */
 
-c.innerHTML=`
-<h2>${qd.q}</h2>
-<div id="answers"></div>
-<button onclick="renderMain()">← Zurück</button>
-`;
+function showQuestion() {
+  if (currentIndex >= questions.length) {
+    showResult();
+    return;
+  }
 
-const a=document.getElementById("answers");
+  const q = questions[currentIndex];
 
-qd.a.forEach((x,ix)=>{
-let div=document.createElement("div");
-div.className="answer";
-div.innerText=x;
+  root.innerHTML = `
+    <div class="big-card">
+      <h3>${q.q}</h3>
 
-div.onclick=()=>{
-
-let cat=currentMain;
-
-if(!stats[cat]){
-stats[cat]={correct:0,wrong:0,total:0};
+      ${q.a.map((ans, i) => `
+        <button class="btn" onclick="answer(${i})">${ans}</button>
+      `).join("")}
+    </div>
+  `;
 }
 
-stats[cat].total++;
+/* -------------------- ANTWORT -------------------- */
 
-if(ix===qd.c){
-div.classList.add("correct");
-stats[cat].correct++;
-}else{
-div.classList.add("wrong");
-stats[cat].wrong++;
+function answer(i) {
+  const q = questions[currentIndex];
+
+  if (i === q.c) {
+    score.correct++;
+  } else {
+    score.wrong++;
+  }
+
+  currentIndex++;
+  showQuestion();
+}
+
+/* -------------------- ERGEBNIS -------------------- */
+
+function showResult() {
+  root.innerHTML = `
+    <div class="big-card">
+      <h2>Ergebnis</h2>
+      <p>✅ Richtig: ${score.correct}</p>
+      <p>❌ Falsch: ${score.wrong}</p>
+
+      <button class="btn" onclick="showCategories()">Weiter</button>
+    </div>
+  `;
+}
+
+/* -------------------- PRÜFUNG (ALLE FRAGEN) -------------------- */
+
+function startExam() {
+  questions = [];
+
+  Object.keys(dbData).forEach(cat => {
+    Object.keys(dbData[cat]).forEach(sub => {
+      questions.push(...dbData[cat][sub]);
+    });
+  });
+
+  questions = shuffle(questions).slice(0, 80);
+
+  currentIndex = 0;
+  score = { correct: 0, wrong: 0 };
+
+  showQuestion();
+}
+
+/* -------------------- UTIL -------------------- */
+
+function shuffle(arr) {
+  return arr.sort(() => Math.random() - 0.5);
 }
 
 function openPDF() {
   window.location.href = "pdf.html";
 }
-  
-localStorage.setItem("stats",JSON.stringify(stats));
 
-setTimeout(()=>{
-i++;
-renderQuiz();
-},400);
-};
-
-a.appendChild(div);
-});
+/* BACK BUTTON */
+function addBack(fn) {
+  root.innerHTML += `
+    <button class="btn btn2" onclick="(${fn.toString()})()">⬅ Zurück</button>
+  `;
 }
+
+/* INIT */
+renderDashboard();
