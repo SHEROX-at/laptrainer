@@ -2,30 +2,43 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAP Trainer</title>
+<title>Dashboard</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div class="header">
-  <div id="title">Kategorien</div>
-  <button onclick="startExam()">🔥 Prüfung</button>
+  <span>🚆 LAP Trainer</span>
+  <button class="btn2" onclick="logout()">Logout</button>
 </div>
 
-<div id="content"></div>
+<div class="grid">
 
-<!-- REIHENFOLGE IST KRITISCH -->
-<script src="data.js"></script>
-<script src="state.js"></script>
-<script src="ui.js"></script>
+  <div class="big-card" onclick="startLearn()">
+    <h3>📚 Lernen</h3>
+    <p>Kategorien & Unterkategorien</p>
+  </div>
+
+  <div class="big-card" onclick="startExam()">
+    <h3>🧠 Prüfung</h3>
+    <p>Alle Fragen gemischt (80 Fragen)</p>
+  </div>
+
+  <div class="big-card" onclick="openPDF()">
+    <h3>📄 Themenkatalog</h3>
+    <p>Original PDF ansehen</p>
+  </div>
+
+</div>
+
 <script src="app.js"></script>
 
-  <div class="card">
-  <h3>📄 Lernen</h3>
-  <button class="btn" onclick="openPDF()">PDF ansehen</button>
-</div>
+<script>
+if (!localStorage.getItem("user")) {
+  window.location.href = "index.html";
+}
+</script>
 
 </body>
 </html>
