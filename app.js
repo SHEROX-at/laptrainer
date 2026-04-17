@@ -73,6 +73,10 @@ div.classList.add("wrong");
 stats[cat].wrong++;
 }
 
+function openPDF() {
+  window.location.href = "pdf.html";
+}
+  
 localStorage.setItem("stats",JSON.stringify(stats));
 
 setTimeout(()=>{
