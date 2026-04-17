@@ -1,78 +1,166 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: Arial;
-  background: radial-gradient(circle, #0a0f2c, #020617);
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at center, #0f172a, #020617);
   color: white;
+}
+
+/* CENTER LOGIN / CONTENT */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* TOPBAR */
 .topbar {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
-  font-size: 20px;
+  align-items: center;
+  padding: 18px 20px;
+  font-size: 18px;
 }
 
 .logout {
-  background: #444;
+  background: rgba(255,255,255,0.1);
   border: none;
   color: white;
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-/* MENU */
-.menu {
+/* MAIN */
+#root {
+  flex: 1;
   padding: 20px;
 }
 
-/* CARD */
+/* CARD (wie vorher, aber besser skaliert) */
 .card {
-  background: #1e293b;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
   padding: 22px;
-  margin-bottom: 15px;
-  border-radius: 16px;
+  margin-bottom: 18px;
+  border-radius: 18px;
   font-size: 18px;
-  transition: 0.2s;
+  transition: 0.25s;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .card:active {
-  transform: scale(0.97);
-  background: #7c3aed;
+  transform: scale(0.96);
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
 }
 
-/* QUESTION */
+/* MENU GRID */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* QUESTION BOX */
 .question {
-  padding: 20px;
+  animation: fadeIn 0.3s ease;
 }
 
+.question h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+/* ANSWERS */
 .answer {
-  background: #1e293b;
+  background: rgba(255,255,255,0.05);
   padding: 18px;
-  margin: 10px 0;
-  border-radius: 12px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  transition: 0.2s;
 }
 
 .answer:active {
-  background: #7c3aed;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
 }
 
 /* RESULT */
 .result {
-  font-size: 28px;
+  font-size: 26px;
   text-align: center;
   margin-top: 40px;
+  font-weight: bold;
 }
 
-/* BACK BUTTON */
+/* BACK BUTTON (clean fix) */
 .back-btn {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background: #7c3aed;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
   border: none;
   padding: 14px 20px;
+  border-radius: 14px;
+  color: white;
+  font-size: 15px;
+  box-shadow: 0 0 20px rgba(124,58,237,0.4);
+}
+
+/* LOGIN BOX (wie vorher aber größer fürs Handy) */
+.login-box {
+  margin: auto;
+  width: 90%;
+  max-width: 350px;
+  background: rgba(255,255,255,0.05);
+  padding: 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 30px rgba(124,58,237,0.2);
+}
+
+.login-box h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* INPUTS */
+input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
   border-radius: 12px;
+  border: none;
+  background: #020617;
+  color: white;
+}
+
+/* BUTTONS */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
   color: white;
   font-size: 16px;
+}
+
+.btn.secondary {
+  background: rgba(255,255,255,0.1);
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
