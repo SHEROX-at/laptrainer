@@ -190,6 +190,25 @@ input {
   box-shadow: none;
 }
 
+.result-block {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+}
+
+.answer.selected {
+  background: #7c3aed;
+}
+
+.answer.correct {
+  background: #16a34a;
+}
+
+.answer.wrong {
+  background: #dc2626;
+}
+
 /* ANIMATION */
 @keyframes fadeIn {
   from {
