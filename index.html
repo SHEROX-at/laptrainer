@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAP Trainer</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -13,17 +14,14 @@
 
   <input class="input" id="user" placeholder="Username">
   <input class="input" id="pass" type="password" placeholder="Passwort">
-  <input class="input" id="code" placeholder="Zugangscode">
+  <input class="input" id="code" placeholder="Code">
 
   <button class="btn" onclick="register()">Registrieren</button>
   <button class="btn btn2" onclick="login()">Login</button>
 
-  <div style="margin-top:15px;font-size:12px;color:#64748b;text-align:center;">
-    Zugang nur mit Code möglich
-  </div>
+  <div class="hint">Zugang nur mit Code</div>
 </div>
 
 <script src="auth.js"></script>
-
 </body>
 </html>
