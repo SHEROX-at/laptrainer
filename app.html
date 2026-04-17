@@ -1,46 +1,45 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LAP Trainer</title>
-
-  <!-- FONT -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <!-- STYLE -->
-  <link rel="stylesheet" href="style.css" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo">🚆 LAP Trainer</div>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+<header>
+  <h2>🚆 LAP Trainer</h2>
+  <button onclick="logout()">Logout</button>
+</header>
 
-  <!-- MAIN -->
-  <div id="root"></div>
+<div class="menu">
+  <button onclick="startQuiz()">📚 Lernen</button>
+  <button onclick="startQuiz()">🧠 Prüfung</button>
+  <button onclick="location='pdf.html'">📄 PDF</button>
+</div>
 
-  <!-- SCRIPTS (REIHENFOLGE WICHTIG) -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+<div id="quiz"></div>
 
-  <!-- AUTH CHECK -->
-  <script>
-    function logout() {
-      localStorage.removeItem("user");
-      window.location.href = "index.html";
-    }
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-    // direkt check beim Laden
-    const user = localStorage.getItem("user");
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  </script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyBLKi7otJVl4EvE3vdFvUJ2iZbXrRo7HPw",
+  authDomain: "gbt-lap.firebaseapp.com",
+  projectId: "gbt-lap",
+});
+</script>
+
+<script src="auth.js"></script>
+<script src="app.js"></script>
+
+<script>
+checkLogin();
+</script>
 
 </body>
 </html>
