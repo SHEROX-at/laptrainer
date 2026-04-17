@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App</title>
+<title>LAP Trainer</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,29 +11,16 @@
 
 <div class="header">
   <span>🚆 LAP Trainer</span>
-  <button class="btn2" onclick="logout()">Logout</button>
+  <button onclick="logout()">Logout</button>
 </div>
 
-<div class="grid">
+<div id="app" class="grid"></div>
 
-  <div class="big-card" onclick="startLearn()">
-    📚 Lernen
-  </div>
-
-  <div class="big-card" onclick="startExam()">
-    🧠 Prüfung (alle Fragen)
-  </div>
-
-  <div class="big-card" onclick="openPDF()">
-    📄 PDF ansehen
-  </div>
-
-</div>
-
+<script src="data.js"></script>
 <script src="app.js"></script>
 
 <script>
-if (!localStorage.getItem("user")) {
+if (!localStorage.getItem("currentUser")) {
   window.location.href = "index.html";
 }
 </script>
