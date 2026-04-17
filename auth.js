@@ -1,60 +1,66 @@
-const ACCESS_CODES = ["1234","LAP2026"];
+const ACCESS_CODE = "1234";
 
-function getUsers(){
-return JSON.parse(localStorage.getItem("users")) || {};
+/* REGISTER */
+function register() {
+  const user = document.getElementById("user").value.trim();
+  const pass = document.getElementById("pass").value.trim();
+  const code = document.getElementById("code").value.trim();
+
+  if (!user || !pass || !code) {
+    alert("Bitte alles ausfüllen");
+    return;
+  }
+
+  if (code !== ACCESS_CODE) {
+    alert("Falscher Zugangscode");
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+  if (users[user]) {
+    alert("User existiert bereits");
+    return;
+  }
+
+  users[user] = {
+    password: pass,
+    progress: {}
+  };
+
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("currentUser", user);
+
+  window.location.href = "app.html";
 }
 
-function saveUsers(users){
-localStorage.setItem("users", JSON.stringify(users));
+/* LOGIN */
+function login() {
+  const user = document.getElementById("user").value.trim();
+  const pass = document.getElementById("pass").value.trim();
+
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+  if (!users[user] || users[user].password !== pass) {
+    alert("Falsche Login Daten");
+    return;
+  }
+
+  localStorage.setItem("currentUser", user);
+
+  window.location.href = "app.html";
 }
 
-function register(){
-const n = document.getElementById("name").value.trim();
-const p = document.getElementById("pw").value.trim();
-const c = document.getElementById("code").value.trim();
-
-if(!n || !p || !c){
-alert("Alles ausfüllen");
-return;
+/* CHECK LOGIN */
+function checkAuth() {
+  const user = localStorage.getItem("currentUser");
+  if (!user) {
+    window.location.href = "index.html";
+  }
 }
 
-if(!ACCESS_CODES.includes(c)){
-alert("Code falsch");
-return;
-}
-
-let users = getUsers();
-
-if(users[n]){
-alert("User existiert bereits");
-return;
-}
-
-users[n] = p;
-saveUsers(users);
-
-/* 🔥 AUTO LOGIN */
-localStorage.setItem("user", n);
-
-window.location.href = "app.html";
-}
-
-function login(){
-const n = document.getElementById("name").value.trim();
-const p = document.getElementById("pw").value.trim();
-
-let users = getUsers();
-
-if(!users[n]){
-alert("User existiert nicht");
-return;
-}
-
-if(users[n] !== p){
-alert("Passwort falsch");
-return;
-}
-
-localStorage.setItem("user", n);
-window.location.href = "app.html";
+/* LOGOUT */
+function logout() {
+  localStorage.removeItem("currentUser");
+  window.location.href = "index.html";
 }
