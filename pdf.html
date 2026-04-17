@@ -1,23 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {
-  margin: 0;
-  background: #020617;
-}
-iframe {
-  width: 100%;
-  height: 100vh;
-  border: none;
-}
-</style>
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Viewer</title>
 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at center, #0b1225, #020617);
+      color: white;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(20, 30, 60, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    button {
+      background: linear-gradient(135deg, #7c3aed, #9333ea);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+    }
+
+    input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    #viewer {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 900px;
+      border-radius: 12px;
+    }
+
+    .info {
+      text-align: center;
+      margin-top: 5px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
 <body>
 
-<iframe src="pdf/gleisbau.pdf#toolbar=1"></iframe>
+  <div class="topbar">
+    <button onclick="goBack()">⬅</button>
+    <input id="searchInput" placeholder="Frage suchen...">
+    <button onclick="searchText()">🔍</button>
+  </div>
+
+  <div id="viewer">
+    <canvas id="pdfCanvas"></canvas>
+  </div>
+
+  <div class="info">
+    Seite <span id="pageNum"></span> / <span id="pageCount"></span>
+  </div>
+
+  <script src="pdf.js"></script>
+  <script src="pdf-viewer.js"></script>
 
 </body>
 </html>
