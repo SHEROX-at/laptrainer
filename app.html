@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAP Trainer</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>LAP Trainer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="header">
-  <span>🚆 LAP Trainer</span>
-  <button onclick="logout()">Logout</button>
+<div id="app">
+
+  <div class="topbar">
+    <div>🚆 LAP Trainer</div>
+    <button onclick="logout()" class="logout">Logout</button>
+  </div>
+
+  <div id="root"></div>
+
 </div>
 
-<div id="app" class="grid"></div>
-
 <script src="data.js"></script>
+<script src="state.js"></script>
 <script src="app.js"></script>
-
-<script>
-if (!localStorage.getItem("currentUser")) {
-  window.location.href = "index.html";
-}
-</script>
 
 </body>
 </html>
