@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAP Trainer</title>
 <link rel="stylesheet" href="style.css">
@@ -10,32 +9,25 @@
 <body class="center">
 
 <div class="card">
-  <div class="title">🚆 LAP Trainer</div>
+  <h2>🚆 LAP Trainer</h2>
 
-  <input class="input" id="user" placeholder="Username">
-  <input class="input" id="pass" type="password" placeholder="Passwort">
-  <input class="input" id="code" placeholder="Code">
+  <input id="username" placeholder="Email">
+  <input id="password" type="password" placeholder="Passwort">
 
-  <button class="btn" onclick="register()">Registrieren</button>
-  <button class="btn btn2" onclick="login()">Login</button>
-
-  <div class="hint">Zugang nur mit Code</div>
+  <button onclick="register()">Registrieren</button>
+  <button onclick="login()">Login</button>
 </div>
 
-<script src="auth.js"></script>
-
-  <!-- Firebase (EINFACHE VERSION) -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyBLKi7otJVl4EvE3vdFv...",
+  apiKey: "AIzaSyBLKi7otJVl4EvE3vdFvUJ2iZbXrRo7HPw",
   authDomain: "gbt-lap.firebaseapp.com",
   projectId: "gbt-lap",
-  storageBucket: "gbt-lap.appspot.com",
-  messagingSenderId: "215338199607",
-  appId: "1:215338199607:web:..."
 };
 
 firebase.initializeApp(firebaseConfig);
