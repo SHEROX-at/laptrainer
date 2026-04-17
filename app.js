@@ -1,213 +1,67 @@
-const root = document.getElementById("root");
+const db = firebase.firestore();
 
-/* ========= SAFE START ========= */
-window.onload = () => {
-  try {
-    initApp();
-  } catch (e) {
-    console.error(e);
-    root.innerHTML = "❌ Fehler beim Laden der App";
+let questions = [
+  {
+    q: "Was sind Kleineisen?",
+    a: ["Befestigung", "nur Schrauben", "nur Nägel", "keine"],
+    correct: [0]
   }
-};
+];
 
-function initApp() {
-  if (typeof db === "undefined") {
-    root.innerHTML = "❌ data.js fehlt oder kaputt";
-    return;
-  }
+let current = 0;
+let answers = [];
 
-  if (Object.keys(db).length === 0) {
-    root.innerHTML = "❌ Keine Daten vorhanden";
-    return;
-  }
-
-  showMenu();
+function startQuiz() {
+  current = 0;
+  answers = [];
+  showQuestion();
 }
 
-/* ========= MENU ========= */
-function showMenu() {
-  root.innerHTML = "";
+function showQuestion() {
+  const q = questions[current];
 
-  const container = document.createElement("div");
-  container.className = "menu";
+  document.getElementById("quiz").innerHTML = `
+    <h3>${q.q}</h3>
+    ${q.a.map((a,i)=>`
+      <div onclick="select(${i})" class="option">${a}</div>
+    `).join("")}
+    <button onclick="next()">Weiter</button>
+  `;
+}
 
-  container.innerHTML = `
-    <div class="card">📚 Lernen</div>
-    <div class="card">🧠 Prüfung</div>
-    <div class="card">📄 PDF ansehen</div>
+function select(i){
+  answers[current] = i;
+}
+
+function next(){
+  current++;
+  if(current < questions.length){
+    showQuestion();
+  } else {
+    finish();
+  }
+}
+
+function finish(){
+  let correct = 0;
+
+  questions.forEach((q,i)=>{
+    if(q.correct.includes(answers[i])) correct++;
+  });
+
+  document.getElementById("quiz").innerHTML = `
+    <h2>Ergebnis: ${correct}/${questions.length}</h2>
   `;
 
-  const cards = container.querySelectorAll(".card");
-
-  cards[0].onclick = showCategories;
-  cards[1].onclick = startExam;
-  cards[2].onclick = openPDF;
-
-  root.appendChild(container);
+  saveProgress(correct);
 }
 
-/* ========= BACK BUTTON ========= */
-function addBack(fn) {
-  const btn = document.createElement("button");
-  btn.className = "back-btn";
-  btn.innerText = "⬅ Zurück";
-  btn.onclick = fn;
-  root.appendChild(btn);
-}
+function saveProgress(score){
+  const user = firebase.auth().currentUser;
 
-/* ========= KATEGORIEN ========= */
-function showCategories() {
-  root.innerHTML = "";
-
-  Object.keys(db).forEach(cat => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerText = cat;
-    el.onclick = () => showSub(cat);
-    root.appendChild(el);
+  db.collection("results").add({
+    user: user.email,
+    score: score,
+    date: new Date()
   });
-
-  addBack(showMenu);
-}
-
-/* ========= SUB ========= */
-function showSub(cat) {
-  root.innerHTML = "";
-
-  Object.keys(db[cat]).forEach(sub => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerText = sub;
-    el.onclick = () => startQuiz(cat, sub);
-    root.appendChild(el);
-  });
-
-  addBack(showCategories);
-}
-
-/* ========= SHUFFLE ========= */
-function shuffle(arr) {
-  return arr.sort(() => Math.random() - 0.5);
-}
-
-/* ========= QUIZ ========= */
-let questions = [];
-let index = 0;
-let results = [];
-
-function startQuiz(cat, sub) {
-  questions = shuffle([...db[cat][sub]]);
-  index = 0;
-  results = [];
-  renderQuestion();
-}
-
-function renderQuestion() {
-  root.innerHTML = "";
-
-  const q = questions[index];
-
-  const answers = shuffle(
-    q.a.map((a, i) => ({
-      text: a,
-      correct: i === q.c
-    }))
-  );
-
-  const selected = new Set();
-
-  const box = document.createElement("div");
-  box.className = "question";
-
-  box.innerHTML = `<h2>${q.q}</h2>`;
-
-  answers.forEach((ans, i) => {
-    const el = document.createElement("div");
-    el.className = "answer";
-    el.innerText = ans.text;
-
-    el.onclick = () => {
-      if (selected.has(i)) {
-        selected.delete(i);
-        el.style.background = "";
-      } else {
-        selected.add(i);
-        el.style.background = "#7c3aed";
-      }
-    };
-
-    box.appendChild(el);
-  });
-
-  const btn = document.createElement("button");
-  btn.className = "btn";
-  btn.innerText = "Weiter";
-
-  btn.onclick = () => {
-    results.push({
-      question: q.q,
-      answers,
-      selected: [...selected]
-    });
-
-    index++;
-
-    if (index >= questions.length) {
-      showResults();
-    } else {
-      renderQuestion();
-    }
-  };
-
-  root.appendChild(box);
-  root.appendChild(btn);
-}
-
-/* ========= RESULTS ========= */
-function showResults() {
-  root.innerHTML = "<h2>Ergebnis</h2>";
-
-  results.forEach((r, i) => {
-    const div = document.createElement("div");
-    div.className = "result-block";
-
-    let html = `<h3>${i + 1}. ${r.question}</h3>`;
-
-    r.answers.forEach((a, j) => {
-      let color = "";
-
-      if (a.correct && r.selected.includes(j)) color = "green";
-      else if (!a.correct && r.selected.includes(j)) color = "red";
-      else if (a.correct) color = "lightgreen";
-
-      html += `<div style="color:${color}">${a.text}</div>`;
-    });
-
-    div.innerHTML = html;
-    root.appendChild(div);
-  });
-
-  addBack(showMenu);
-}
-
-/* ========= PRÜFUNG ========= */
-function startExam() {
-  let all = [];
-
-  Object.values(db).forEach(cat => {
-    Object.values(cat).forEach(sub => {
-      all = all.concat(sub);
-    });
-  });
-
-  questions = shuffle(all);
-  index = 0;
-  results = [];
-
-  renderQuestion();
-}
-
-/* ========= PDF ========= */
-function openPDF() {
-  window.location.href = "pdf.html";
 }
